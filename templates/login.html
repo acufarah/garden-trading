@@ -1,1 +1,12 @@
-login.html
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Login form</h2>
+ <form action='/login' method = "POST">
+        To Login, enter your email address: <input type='text' name='email'><br>
+        Enter your password: <input type='text' name='password'><br>
+        <input type='submit'>
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+  <title>Garden Trading</title>
+</head>
+
+<body>
+<!-- Sign Up Button -->
+  {% if 'user_id' not in session %}
+  <div style='float:right'>
+    <form action='/sign_up'>
+    <input name='submit3' type='submit' id='submit3' value='sign_up'>
+  
+  </form>
+  </div>    
+  {% endif %}
+
+<!-- Login Button -->
+  {% if 'user_id' not in session %}
+  <div style='float:right'>
+    <form action='/login'>
+    <input name='submit1' type='submit' id='submit1' value='login'>
+  
+  </form>
+  </div>    
+  {% endif %}
+
+<!-- Logout Button -->
+  {% if 'user_id' in session %}
+  <div style='float:right'>
+    <form action='/logout'>
+    <input name='submit2' type='submit' id='submit2' value='logout'>
+  
+  </form>
+  </div>    
+  {% endif %}
+  <ul> 
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+     {% for message in messages %}
+    <li> {{message}}</li>
+    {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+</ul>
+  GardenTrading
+  <hr>
+
+  {% block content %} put your content here {% endblock %}
+
+</body>
+</html>

@@ -1,1 +1,19 @@
-sign_up.html
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>Garden Trading Sign Up Form</h2>
+
+    <form action='/sign_up' method = "POST">
+    	First name: <input type='text' name='fname' required>
+    	Last name: <input type='text' name='lname' required><br>
+    	Address: <input type='text' name='address' required><br>
+    	City: <input type='text' name='address' required>
+    	State: <input type='text' name='state' required><br>
+    	Zipcode: <input type='text' name='zipcode' required><br>
+    	Enter new username: <input type='text' name='username' required><br>
+        Email address: <input type='text' name='email' required><br>
+        Enter new password: <input type='text' name='password' required><br>
+        <input type='submit'>
+
+
+{% endblock %}        
