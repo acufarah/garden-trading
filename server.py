@@ -103,7 +103,7 @@ def produce_add():
 def produce_add_process():
 	"""Sign up process."""
 
-	prod_name = request.form.get('name')
+	prod_name = request.form.get('prod_name')
 	prod_type = request.form.get('prod_type')
 	avail_date = request.form.get('avail_date')
 	describe = request.form.get('describe')
@@ -117,7 +117,8 @@ def produce_add_process():
 @app.route('/new_listing')
 def new_listing():
 	"""Shows newly made produce listing."""
-	return render_template('/new_listing.html',prod_name=prod_name, prod_type=prod_type, avail_date=avail_date, describe=describe)
+	produce = db.session.query(Produce).order_by(Produce.prod_id.desc()).first()
+	return render_template('/new_listing.html', prod_name=produce.prod_name, prod_type=produce.prod_type, avail_date=produce.avail_date, describe=produce.describe)
 
 @app.route('/vegetables')
 def veg_directory():
