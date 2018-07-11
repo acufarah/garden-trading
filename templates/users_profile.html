@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>User Profile</h2>
+  <ul>
+  	<li>
+  		Name: {{user.fname}} {{user.lname}}<br>
+  		Username: {{user.username}}<br>
+  		Email: {{user.email}}<br>
+  		Address: {{user.address}}<br>
+  		City: {{user.city}}<br>
+  		State: {{user.state}}<br>
+  		Zipcode: {{user.zipcode}}<br>
+  	</li>
+ </ul>
+<br>
+<br>
+<a href="produce_add.html">I want to add a new produce listing!</a>
+
+
+
+
+
+
+{% endblock %}

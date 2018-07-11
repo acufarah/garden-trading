@@ -5,7 +5,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, flash, session)
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, connect_to_db, db
+from model import User, Produce, connect_to_db, db
 
 
 app = Flask(__name__)
@@ -18,7 +18,6 @@ app.jinja_env.undefined = StrictUndefined
 @app.route('/')
 def index():
     """Homepage."""
-    
     return render_template("home.html")
 
 @app.route('/sign_up', methods=["GET"])
@@ -74,23 +73,80 @@ def show_login_form():
 	return render_template("login.html")
 
 
-@app.route('/users/<int:uid>')
+@app.route('/users_profile/<int:uid>')
 def show_user_info(uid):
 
 	print("User UID is: {}".format(uid))
 
 	user = User.query.get(uid)
 
-	return render_template('user_profile.html', user=user, username=user.username, email=user.email, password=user.password, fname=user.fname, lname=user.lname,
+	return render_template('users_profile.html', user=user, username=user.username, email=user.email, password=user.password, fname=user.fname, lname=user.lname,
 						address=user.address, city=user.city, state=user.state, zipcode=user.zipcode)
 
+@app.route('/logout')
+def logout():
+	if 'user_id' in session:
+		session.pop('user_id', None)
+		flash('You are now logged out')
+		return redirect('/')
+	else:
+		flash('You are not logged in')
+		return redirect('/login')
 
+@app.route('/users_profile/produce_add.html', methods=["GET"])
+def produce_add():
+	"""Sign up page."""
 
+	return render_template("produce_add.html")
 
+@app.route('/produce_add', methods=["POST"])
+def produce_add_process():
+	"""Sign up process."""
 
+	prod_name = request.form.get('name')
+	prod_type = request.form.get('prod_type')
+	avail_date = request.form.get('avail_date')
+	describe = request.form.get('describe')
 
+	new_produce = Produce(prod_name=prod_name, prod_type=prod_type, avail_date=avail_date, describe=describe)
+	db.session.add(new_produce)
+	db.session.commit()
+	flash("Produce successfully added to database")
+	return redirect('/new_listing')
 
+@app.route('/new_listing')
+def new_listing():
+	"""Shows newly made produce listing."""
+	return render_template('/new_listing.html',prod_name=prod_name, prod_type=prod_type, avail_date=avail_date, describe=describe)
 
+@app.route('/vegetables')
+def veg_directory():
+	"""Directory of vegetable listings"""
+	return render_template('/vegetables.html')
+
+@app.route('/fruits')
+def fruit_directory():
+	"""Directory of fruit listings"""
+	return render_template('/fruits.html')
+
+@app.route('/nuts')
+def nut_directory():
+	"""Directory of nut listings"""
+	return render_template('/nuts.html')
+
+@app.route('/seeds')
+def seed_directory():
+	"""Directory of seed listings"""
+	return render_template('/seeds.html')
+
+@app.route('/herbs')
+def herbs_directory():
+	return render_template('/herbs.html')
+
+@app.route('/garden_areas')
+def garden_directory():
+	"""Directory of garden listings"""
+	return render_template('/garden_areas.html')
 
 
 

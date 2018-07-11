@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<form action="/produce_add" method="POST">
+
+What is it? (tomatoes? pecans? oregano? etc.):<input type='text' name='name' required><br>
+
+Product Category: 
+	<select name='prod_type'>
+		<option value='1'>Vegetable</option>
+		<option value='2'>Fruit</option>
+		<option value='3'>Herbs</option>
+		<option value='4'>Seeds</option>
+	</select><br>
+Date Available:<input type="datetime-local" name="avail_date"><br>
+
+<p>Description(variety, organic or conventional, taste, etcetera):</p>
+<div>
+	<textarea name='describe' required></textarea>
+</div>
+
+<input type='submit'>
+</form>
+
+{% endblock %}   
