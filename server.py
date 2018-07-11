@@ -123,25 +123,31 @@ def new_listing():
 @app.route('/vegetables')
 def veg_directory():
 	"""Directory of vegetable listings"""
-	return render_template('/vegetables.html')
+	vegetables = Produce.query.filter_by(prod_id=1).all()
+	return render_template('/vegetables.html', vegetables=vegetables)
 
 @app.route('/fruits')
 def fruit_directory():
 	"""Directory of fruit listings"""
-	return render_template('/fruits.html')
+	fruits = Produce.query.filter_by(prod_id=2).all()
+	return render_template('/fruits.html', fruits=fruits)
 
 @app.route('/nuts')
 def nut_directory():
 	"""Directory of nut listings"""
-	return render_template('/nuts.html')
+	nuts = Produce.query.filter_by(prod_id=5).all()
+	return render_template('/nuts.html', nuts=nuts)
 
 @app.route('/seeds')
 def seed_directory():
 	"""Directory of seed listings"""
+	seeds = Produce.query.filter_by(prod_id=4).all()
 	return render_template('/seeds.html')
 
 @app.route('/herbs')
 def herbs_directory():
+	"""Directory of herb listings"""
+	herbs = Produce.query.filter_by(prod_id=3).all()
 	return render_template('/herbs.html')
 
 @app.route('/garden_areas')

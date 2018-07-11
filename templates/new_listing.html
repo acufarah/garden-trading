@@ -4,7 +4,18 @@
   <ul>
   	<li>
   		Name: {{prod_name}}<br>
-  		Category: {{prod_type}}<br>
+  		{% if prod_type == 1 %}
+  		Category: Vegetable
+  		{% elif prod_type == 2 %}
+  		Category: Fruit
+  		{% elif prod_type == 3 %}
+  		Category: Herbs
+  		{% elif prod_type == 4 %}
+  		Category: Seeds
+  		{% elif prod_typ == 5 %}
+  		Category: Nuts
+  		{% endif %}
+  		<br>
   		Availability Date: {{avail_date}}<br>
   	</li>
  </ul>
