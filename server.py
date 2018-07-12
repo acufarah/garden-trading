@@ -2,14 +2,17 @@
 
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, redirect, request, flash, session)
+from flask import (Flask, render_template, redirect, request, jsonify, url_for, flash, session)
+from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
-
+from werkzeug import secure_filename
 from model import User, Produce, connect_to_db, db
 
-
 app = Flask(__name__)
+app.config.from_object(__name__)
+app.config['UPLOAD_FOLDER'] = 'upload'
 
+ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
@@ -154,6 +157,24 @@ def herbs_directory():
 def garden_directory():
 	"""Directory of garden listings"""
 	return render_template('/garden_areas.html')
+
+@app.route('/users_profile/img_upload.html')
+def img_upload():
+	"""Directory of garden listings"""
+	return render_template('/img_upload.html')
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            now = datetime.now()
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
+            file.save(filename)
+            return jsonify({"success":True})
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
 

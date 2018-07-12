@@ -26,9 +26,12 @@ class User(db.Model):
     city = db.Column(db.String(100), nullable=True)
     state = db.Column(db.String(2), nullable=False)
     zipcode = db.Column(db.String(15), nullable=False)
-    #profile_pic = pass
+    usr_img= db.Column(db.String, default=None, nullable=True)
+    usr_img_url = db.Column(db.String, default=None, nullable=True)
     about_me = db.Column(db.Text, nullable=True)
     about_garden = db.Column(db.Text, nullable=True)
+    gard_img= db.Column(db.String, default=None, nullable=True)
+    gard_img_url = db.Column(db.String, default=None, nullable=True)
 
     """def set_password(self, password):
     	self.password_hash = generate_password_hash(password)
@@ -41,19 +44,19 @@ def __repr__(self):
     return f"<User user_id={self.user_id} email={self.email} >"
 
 class Produce(db.Model):
-	"""Produce available from gardens."""
+    """Produce available from gardens."""
+    __tablename__ = "produce"
 
-	__tablename__ = "produce"
+    prod_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    prod_img= db.Column(db.String, default=None, nullable=True)
+    prod_img_url = db.Column(db.String, default=None, nullable=True)
+    prod_name = db.Column(db.String(120), nullable=False)
+    prod_type = db.Column(db.Integer, nullable=True)
+    describe = db.Column(db.Text, nullable=False)
+    avail_date = db.Column(db.Date, nullable=False)
 
-	prod_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-	user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-	#prod_pic = pass
-	prod_name = db.Column(db.String(120), nullable=False)
-	prod_type = db.Column(db.Integer, nullable=True)
-	describe = db.Column(db.Text, nullable=False)
-	avail_date = db.Column(db.Date, nullable=False)
-
-	user = db.relationship("User", backref=db.backref("produce", order_by=prod_id))
+    user = db.relationship("User", backref=db.backref("produce", order_by=prod_id))
 
 def __repr__(self):
     """Provide helpful representation when printed."""
