@@ -3,6 +3,7 @@
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, jsonify, url_for, flash, session)
+import os
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
@@ -10,9 +11,9 @@ from model import User, Produce, connect_to_db, db
 
 app = Flask(__name__)
 app.config.from_object(__name__)
-app.config['UPLOAD_FOLDER'] = 'upload'
+app.config['UPLOAD_FOLDER'] = "/home/vagrant/src/gardenproject/static/uploads"
 
-ALLOWED_EXTENSIONS = ['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif']
+ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg'])
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
 
@@ -159,31 +160,24 @@ def garden_directory():
 	return render_template('/garden_areas.html')
 
 @app.route('/users_profile/img_upload.html')
-def img_upload():
-	"""Directory of garden listings"""
+def img_upload_form():
+	"""Create the image upload page and form"""
 	return render_template('/img_upload.html')
 
-@app.route('/upload', methods=['POST'])
-def upload():
-    if request.method == 'POST':
-        file = request.files['file']
-        if file and allowed_file(file.filename):
-            now = datetime.now()
-            filename = os.path.join(app.config['UPLOAD_FOLDER'], "%s.%s" % (now.strftime("%Y-%m-%d-%H-%M-%S-%f"), file.filename.rsplit('.', 1)[1]))
-            file.save(filename)
-            return jsonify({"success":True})
+@app.route('/users_profile/img_upload.html', methods=['POST'])
+def img_upload():
+	if 'user_id' in session:
+		user_id = session.get('user_id')
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
-
-
-
-
-
-
-
-
-
+		f = request.files['usr_img']
+		filename = secure_filename(f.filename)
+		f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		user_in_session = User.query.get(user_id)
+		user_in_session.usr_img = filename
+		db.session.commit()
+		flash("Photo uploaded and stored successfully")	
+		return redirect('/users_profile/{}'.format(user_id))
+	
 
 
 if __name__ == "__main__":

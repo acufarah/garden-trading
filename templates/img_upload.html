@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<h2>Upload A Profile Photo:</h2><br>
+
+<form action="/users_profile/img_upload.html" method="POST" enctype="multipart/form-data">
+	<input type="file" id= "usr_img" name="usr_img" accept="image/*"><br><br>
+	<button type="submit" value="Submit Photo">Submit Photo</button>
+
+{% endblock %}  
