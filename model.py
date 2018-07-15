@@ -1,5 +1,4 @@
 """Model and database functions for Garden Trading App."""
-
 from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import datetime
@@ -26,6 +25,9 @@ class User(db.Model):
     city = db.Column(db.String(100), nullable=True)
     state = db.Column(db.String(2), nullable=False)
     zipcode = db.Column(db.String(15), nullable=False)
+    full_address = db.Column(db.String(250), nullable=True)
+    latitude = db.Column(db.DECIMAL(9,6), nullable=True)
+    longitude = db.Column(db.DECIMAL(9,6), nullable=True)
     usr_img= db.Column(db.String, default=None, nullable=True)
     usr_img_url = db.Column(db.String, default=None, nullable=True)
     about_me = db.Column(db.Text, nullable=True)

@@ -1,8 +1,8 @@
 """Garden trading app."""
-
+import requests
 from jinja2 import StrictUndefined
 
-from flask import (Flask, render_template, redirect, request, jsonify, url_for, flash, session)
+from flask import (Flask, render_template, redirect, request, json, jsonify, url_for, flash, session)
 import os
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
@@ -44,14 +44,29 @@ def sign_up_process():
 	email = request.form.get('email')
 	password = request.form.get('password')
 
+	#Reformat address info for GMap request
+
+	#full_address = ('{}, {}, {}, {}'.format(address, city, state, zipcode))
+	#Make Gmaps geocoding request
+	#payload = {'key': 'AIzaSyDpibo_0YQwz2T28Bh06cP9UX3ID-0yt-U', address:'{}'.format(full_address)}
+	#base_url = "https://maps.googleapis.com/maps/api/geocode/json"
+	#response = requests.get(base_url, params=payload)
+	#data = response.json()
+	#if data.get("results", []):
+	#Transform response into latitude and longitude
+		#latitude = data['results'][0]['geometry']['location']['lat']
+		#longitude = data['results'][0]['geometry']['location']['lng']"""
+
 	if User.query.filter_by(username='username').first():
 		flash("User with this username already exists.")
 	elif User.query.filter_by(email='email').first():
 		flash("User with this email already exists.")
 		return redirect('/')
+
+		#store info in DB
 	else:
 		new_user = User(username=username, email=email, password=password, fname=fname, lname=lname,
-						address=address, city=city, state=state, zipcode=zipcode)
+						address=address, city=city, state=state, zipcode=zipcode)#, full_address=full_address, latitude=latitude, longitude=longitude""")
 		db.session.add(new_user)
 		db.session.commit()
 		flash("User added to database. Please log in.")
@@ -158,6 +173,12 @@ def herbs_directory():
 def garden_directory():
 	"""Directory of garden listings"""
 	return render_template('/garden_areas.html')
+
+@app.route('/garden_areas')
+def address_map():
+	"""Transform address data from DB to plot on GMaps."""
+	pass
+
 
 @app.route('/users_profile/img_upload.html')
 def img_upload_form():
