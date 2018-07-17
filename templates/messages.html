@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Messages</h1>
+<div class="form-group">
+ 	  <div class="form-group row">
+ 	  	<div class="col-sm-10">
+			Most Recent Message
+				{{ message }}
+			<form action='/send_message/<recipient>'
+				<button type="submit" value="reply">Reply</button><br>
+			</form>
+		</div>
+	  </div>
+</div>
+Previous Messages:
+
+{% for m in messages %}
+{{ m }}
+{% endfor %}
+
+{% endblock %}  

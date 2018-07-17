@@ -7,7 +7,8 @@ import os
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
-from model import User, Produce, connect_to_db, db
+from model import User, Produce, Message, connect_to_db, db
+from geopy.geocoders import Nominatim
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -43,30 +44,20 @@ def sign_up_process():
 	username = request.form.get('username')
 	email = request.form.get('email')
 	password = request.form.get('password')
-
-	#Reformat address info for GMap request
-
-	#full_address = ('{}, {}, {}, {}'.format(address, city, state, zipcode))
-	#Make Gmaps geocoding request
-	#payload = {'key': 'AIzaSyDpibo_0YQwz2T28Bh06cP9UX3ID-0yt-U', address:'{}'.format(full_address)}
-	#base_url = "https://maps.googleapis.com/maps/api/geocode/json"
-	#response = requests.get(base_url, params=payload)
-	#data = response.json()
-	#if data.get("results", []):
-	#Transform response into latitude and longitude
-		#latitude = data['results'][0]['geometry']['location']['lat']
-		#longitude = data['results'][0]['geometry']['location']['lng']"""
-
+	full_address = ('{}, {}, {}, {}'.format(address, city, state, zipcode))
+	geolocator = Nominatim()
+	location = geolocator.geocode(full_address)
+	latitude = location.latitude
+	longitude = location.longitude
 	if User.query.filter_by(username='username').first():
 		flash("User with this username already exists.")
 	elif User.query.filter_by(email='email').first():
 		flash("User with this email already exists.")
 		return redirect('/')
-
-		#store info in DB
 	else:
+		#Store new user info in DB
 		new_user = User(username=username, email=email, password=password, fname=fname, lname=lname,
-						address=address, city=city, state=state, zipcode=zipcode)#, full_address=full_address, latitude=latitude, longitude=longitude""")
+						address=address, city=city, state=state, zipcode=zipcode, full_address=full_address, latitude=latitude, longitude=longitude)
 		db.session.add(new_user)
 		db.session.commit()
 		flash("User added to database. Please log in.")
@@ -172,7 +163,8 @@ def herbs_directory():
 @app.route('/garden_areas')
 def garden_directory():
 	"""Directory of garden listings"""
-	return render_template('/garden_areas.html')
+	gardeners = db.session.query(User).order_by(User.user_id.desc()).first()
+	return render_template('/garden_areas.html', gardeners=gardeners)
 
 @app.route('/garden_areas')
 def address_map():
@@ -198,6 +190,35 @@ def img_upload():
 		db.session.commit()
 		flash("Photo uploaded and stored successfully")	
 		return redirect('/users_profile/{}'.format(user_id))
+
+@app.route('/send_message/<recipient>')
+def send_message_form(recipient):
+	user = User.query.filter_by(username=recipient).first_or_404()
+	return render_template('send_message.html', recipient=recipient)
+
+@app.route('/send_message/<recipient>', methods=['POST'])
+def send_message(recipient):
+	user = User.query.filter_by(username=recipient).first_or_404()
+	session['user_id']= sender
+	body = form.get('body')
+	msg = Message(sender=sender, recipient=user,
+                  body=body)
+	db.session.add(msg)
+	db.session.commit()
+	flash(_('Your message has been sent.'))
+	return redirect('/')
+
+@app.route('/users_profile/messages.html')
+def messages():
+	if 'user_id' in session:
+		user_id = session.get('user_id')
+		current_user = user_id
+		#current_user.last_message_read_time = datetime.utcnow()
+		db.session.commit()
+		messages = Message.query.filter(Message.recipient_id =='{}'.format(current_user)).order_by(Message.message_id.desc())
+		message = messages.first()
+		return render_template('messages.html', message=message, messages=messages, current_user=current_user)  
+
 	
 
 

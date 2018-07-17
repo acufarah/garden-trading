@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<h1> Send Message</h1>
+
+<form action="/send_message/<recipient>" method="POST">
+  <div class="form-group">
+ 	  <div class="form-group row">
+    	<label for="input-message" class="col-sm-2 col-form-label">Send Message to {{ recipient }}</label>
+      	  <div class="col-sm-10">
+            <input type="textarea" name="body" class="form-control" id="message-body" placeholder="body">
+          </div>
+          <button type="submit" class="btn btn-primary">Send</button>
+  	  </div>
+  </div>
+</form>
+
+
+
+{% endblock %}  

@@ -22,18 +22,33 @@ class User(db.Model):
     fname = db.Column(db.String(55), nullable=False)
     lname = db.Column(db.String(55), nullable=False)
     address = db.Column(db.String(120), nullable=False)
-    city = db.Column(db.String(100), nullable=True)
+    city = db.Column(db.String(120), nullable=False)
     state = db.Column(db.String(2), nullable=False)
     zipcode = db.Column(db.String(15), nullable=False)
-    full_address = db.Column(db.String(250), nullable=True)
-    latitude = db.Column(db.DECIMAL(9,6), nullable=True)
-    longitude = db.Column(db.DECIMAL(9,6), nullable=True)
+    full_address = db.Column(db.String(320), nullable=True)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
     usr_img= db.Column(db.String, default=None, nullable=True)
     usr_img_url = db.Column(db.String, default=None, nullable=True)
     about_me = db.Column(db.Text, nullable=True)
     about_garden = db.Column(db.Text, nullable=True)
     gard_img= db.Column(db.String, default=None, nullable=True)
     gard_img_url = db.Column(db.String, default=None, nullable=True)
+
+    #Create relationships for messaging.
+
+    messages_sent = db.relationship('Message',
+                                    foreign_keys='Message.sender_id',
+                                    backref='sender', lazy='dynamic')
+    messages_received = db.relationship('Message',
+                                        foreign_keys='Message.recipient_id',
+                                        backref='recipient', lazy='dynamic')
+    last_message_read_time = db.Column(db.DateTime)
+
+    def new_messages(self):
+        last_read_time = self.last_message_read_time or datetime(1900, 1, 1)
+        return Message.query.filter_by(recipient=self).filter(
+            Message.timestamp > last_read_time).count()
 
     """def set_password(self, password):
     	self.password_hash = generate_password_hash(password)
@@ -64,15 +79,18 @@ def __repr__(self):
     """Provide helpful representation when printed."""
     return f"<Produce prod_id={self.prod_id} user_id={self.user_id} prod_name={self.prod_name} >"
 
-"""class Message(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
-    recipient_id = db.Column(db.Integer, db.ForeignKey('user.user_id'))
+class Message(db.Model):
+    """For user messaging system."""
+    __tablename__= "messages"
+
+    message_id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    recipient_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
-    def __repr__(self):
-        return '<Message {}>'.format(self.body)"""
+def __repr__(self):
+        return '<Message {}>'.format(self.body)
 
 
 
