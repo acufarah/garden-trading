@@ -3,9 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
-
+ma = Marshmallow()
 ##############################################################################
 # Model definitions
 
@@ -93,8 +94,17 @@ def __repr__(self):
         return '<Message {}>'.format(self.body)
 
 
+class UserSchema(ma.ModelSchema):
+    class Meta:
+        model = User
 
+class ProduceSchema(ma.ModelSchema):
+    class Meta:
+        model = Produce
 
+class MessageSchema(ma.ModelSchema):
+    class Meta:
+        model = Message
 
 def init_app():
     # So that we can use Flask-SQLAlchemy, we'll make a Flask app.

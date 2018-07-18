@@ -1,5 +1,6 @@
 """Garden trading app."""
 import requests
+import geopy.geocoders
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, json, jsonify, url_for, flash, session)
@@ -7,8 +8,10 @@ import os
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
-from model import User, Produce, Message, connect_to_db, db
 from geopy.geocoders import Nominatim
+from model import User, Produce, Message, connect_to_db, db
+from model import UserSchema, ProduceSchema, MessageSchema
+
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -91,7 +94,7 @@ def show_user_info(uid):
 	user = User.query.get(uid)
 
 	return render_template('users_profile.html', user=user, username=user.username, email=user.email, password=user.password, fname=user.fname, lname=user.lname,
-						address=user.address, city=user.city, state=user.state, zipcode=user.zipcode)
+						address=user.address, city=user.city, state=user.state, zipcode=user.zipcode, usr_img=user.usr_img)
 
 @app.route('/logout')
 def logout():
@@ -166,10 +169,13 @@ def garden_directory():
 	gardeners = db.session.query(User).order_by(User.user_id.desc()).first()
 	return render_template('/garden_areas.html', gardeners=gardeners)
 
-@app.route('/garden_areas')
+@app.route('/garden_areas.json')
 def address_map():
 	"""Transform address data from DB to plot on GMaps."""
-	pass
+	users = User.query.all()
+	user_schema = UserSchema(many=True)
+	output = user_schema.dump(users).data
+	return jsonify({ 'user' : output })
 
 
 @app.route('/users_profile/img_upload.html')
@@ -182,14 +188,36 @@ def img_upload():
 	if 'user_id' in session:
 		user_id = session.get('user_id')
 
-		f = request.files['usr_img']
-		filename = secure_filename(f.filename)
-		f.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+		f1 = request.files['usr_img']
+		filename1 = secure_filename(f1.filename)
+		f1.save(os.path.join(app.config['UPLOAD_FOLDER'], filename1))
 		user_in_session = User.query.get(user_id)
-		user_in_session.usr_img = filename
+		user_in_session.usr_img = filename1
+		user_in_session.user_img_url = f"{(app.config['UPLOAD_FOLDER'])}//{filename1}"
 		db.session.commit()
 		flash("Photo uploaded and stored successfully")	
+		"""f2 = request.files['prod_img']
+		filename2 = secure_filename(f2.filename)
+		f2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
+		produce = db.session.query(Produce).order_by(Produce.prod_id.desc()).first()
+		produce.prod_img = filename2
+		produce.prod_img_url = f"{(app.config['UPLOAD_FOLDER'])}//{filename2}"
+		db.session.commit()
+		flash("Photo uploaded and stored successfully")	
+
+		f3 = request.files['gard_img']
+		filename3 = secure_filename(f3.filename)
+		f3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
+		user_in_session = User.query.get(user_id)
+		user_in_session.gard_img = filename3
+		user_in_session.gard_img_url = f"{(app.config['UPLOAD_FOLDER'])}//{filename3}"
+		db.session.commit()
+		flash("Photo uploaded and stored successfully")	"""
 		return redirect('/users_profile/{}'.format(user_id))
+
+
+
+@app.route('/users_profile/img_upload.html', methods=['POST'])
 
 @app.route('/send_message/<recipient>')
 def send_message_form(recipient):

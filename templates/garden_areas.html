@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <style>
       html,
       body {
@@ -57,6 +58,29 @@
       <div id="map"></div>
     </div>
     <script>
+    let userData = $.getJSON( "/garden_areas.json", function( data ) {
+      console.log( data );});
+
+    console.log(userData[0]);
+
+    let locations = [];
+
+    for(i = 0; i < userData.length; i++) {
+      
+      let latlng = newMap();
+      latlng.set('lat', userData[i].latitude);
+      latlng.set('lng', userData[i].longitude);
+      let location = newMap();
+      location.set('title', userData[i].username);
+      location.set('location', latlng);
+      locations.push(location);
+    };
+
+    console.log(locations);
+
+
+
+      
       var map;
       // Create a new blank array for all the listing markers.
       var markers = [];
@@ -69,6 +93,8 @@
         });
         // These are the real estate listings that will be shown to the user.
         // Normally we'd have these in a database instead.
+
+
         var locations = [
           {title: 'Park Ave Penthouse', location: {lat: 40.7713024, lng: -73.9632393}},
           {title: 'Chelsea Loft', location: {lat: 40.7444883, lng: -73.9949465}},

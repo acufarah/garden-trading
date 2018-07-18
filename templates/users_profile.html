@@ -2,6 +2,13 @@
 {% block content %}
 
 <h2>User Profile</h2>
+
+<figure>
+  <img src="/static/uploads/{{usr_img}}"
+       alt="User photo"
+       width="250"
+       height="250">
+</figure>
   <ul>
   	<li>
   		Name: {{user.fname}} {{user.lname}}<br>
