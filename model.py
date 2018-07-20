@@ -87,7 +87,9 @@ class Message(db.Model):
     message_id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    body = db.Column(db.String(140))
+    sender_username = db.Column(db.String(120), nullable = False)
+    recipient_username = db.Colum(db.String(120), nullable = False)
+    body = db.Column(db.String(200), nullable = False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 def __repr__(self):

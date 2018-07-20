@@ -1,10 +1,12 @@
 """Garden trading app."""
 import requests
+from datetime import datetime
 import geopy.geocoders
 from jinja2 import StrictUndefined
 
 from flask import (Flask, render_template, redirect, request, json, jsonify, url_for, flash, session)
 import os
+import geojson
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
@@ -173,9 +175,15 @@ def garden_directory():
 def address_map():
 	"""Transform address data from DB to plot on GMaps."""
 	users = User.query.all()
-	user_schema = UserSchema(many=True)
-	output = user_schema.dump(users).data
-	return jsonify({ 'user' : output })
+	feature_lst = []
+	for user in users:
+		lat = user.latitude
+		lng = user.longitude
+		loc_point = geojson.Point((user.longitude, user.latitude))
+		loc_json = geojson.Feature(geometry=loc_point)
+		feature_lst.append(loc_json)
+	locs_json = geojson.FeatureCollection(feature_lst)
+	return jsonify(locs_json)
 
 
 @app.route('/users_profile/img_upload.html')
@@ -217,33 +225,33 @@ def img_upload():
 
 
 
-@app.route('/users_profile/img_upload.html', methods=['POST'])
+@app.route('/send_message')
+def send_message_form():
+	return render_template('send_message.html')
 
-@app.route('/send_message/<recipient>')
-def send_message_form(recipient):
-	user = User.query.filter_by(username=recipient).first_or_404()
-	return render_template('send_message.html', recipient=recipient)
-
-@app.route('/send_message/<recipient>', methods=['POST'])
-def send_message(recipient):
-	user = User.query.filter_by(username=recipient).first_or_404()
-	session['user_id']= sender
-	body = form.get('body')
-	msg = Message(sender=sender, recipient=user,
-                  body=body)
+@app.route('/send_message', methods=['POST'])
+def send_message():
+	username = request.form.get('username')
+	user = User.query.filter_by(username=username).first_or_404()
+	current_user = User.query.filter(User.user_id== session['user_id'])
+	sender = current_user.username
+	body = request.form.get('body')
+	msg = Message(sender_username=sender, recipient_username=username, user=user,
+				  body=body)
 	db.session.add(msg)
 	db.session.commit()
 	flash(_('Your message has been sent.'))
-	return redirect('/')
+    return redirect(url_for('main.user', username=recipient))
 
 @app.route('/users_profile/messages.html')
 def messages():
 	if 'user_id' in session:
-		user_id = session.get('user_id')
-		current_user = user_id
-		#current_user.last_message_read_time = datetime.utcnow()
+		u_id = session.get('user_id')
+		current_user = User.query.filter(User.user_id== session['user_id'])
+		current_user.last_message_read_time = datetime.utcnow()
 		db.session.commit()
-		messages = Message.query.filter(Message.recipient_id =='{}'.format(current_user)).order_by(Message.message_id.desc())
+		#messages = current_user.messages_received.order_by(Message.timestamp.desc())
+		messages = Message.query.filter(Message.recipient_id =='{}'.format(u_id)).order_by(Message.message_id.desc())
 		message = messages.first()
 		return render_template('messages.html', message=message, messages=messages, current_user=current_user)  
 
