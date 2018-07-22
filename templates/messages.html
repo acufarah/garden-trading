@@ -5,18 +5,22 @@
 <div class="form-group">
  	  <div class="form-group row">
  	  	<div class="col-sm-10">
-			Most Recent Message
-				{{ message }}
-			<form action='/send_message/<username>'
-				<button type="submit" value="reply">Reply</button><br>
+			From: {{ message.sender_username }}<br>
+			To:   {{ message.recipient_username }}<br>
+			Message: <br>{{ message.body}}<br>
+			<br>
+				<form>
+    			<button type="submit" formaction='../send_message'>Reply</button>
 			</form>
 		</div>
 	  </div>
 </div>
-Previous Messages:
+<h2>Previous Messages:</h2><br>
 
 {% for m in messages %}
-{{ m }}
+From: {{ m.sender_username }}<br>
+To: {{ m.recipient_username }}<br>
+Message: {{ m.body }}<br>
 {% endfor %}
 
-{% endblock %}  
+{% endblock %} 

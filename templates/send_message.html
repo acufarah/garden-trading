@@ -4,14 +4,20 @@
 
 <h1> Send Message</h1>
 
-<form action="/send_message/<username>" method="POST">
+<form action="/send_message" method="POST">
   <div class="form-group">
+
  	  <div class="form-group row">
-    	<label for="input-message" class="col-sm-2 col-form-label">Send Message to {{ username }}</label>
-      	  <div class="col-sm-10">
-            <input type="textarea" name="body" class="form-control" id="message-body" placeholder="body">
-          </div>
+ 	  	<div class="col-sm-10">
+ 	  	  Enter your username: <input type='text' name='sender_username' required><br>
+      
+      	  Enter recipient's username: <input type='text' name='recipient_username' required><br>
+
+          Enter message here:<input type="textarea" name="body" class="form-control" id="body" placeholder="body"><br>
+
           <button type="submit" class="btn btn-primary">Send</button>
+          </div>
+        
   	  </div>
   </div>
 </form>

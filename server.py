@@ -12,7 +12,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
 from geopy.geocoders import Nominatim
 from model import User, Produce, Message, connect_to_db, db
-from model import UserSchema, ProduceSchema, MessageSchema
+#from model import UserSchema, ProduceSchema, MessageSchema
 
 
 app = Flask(__name__)
@@ -231,17 +231,17 @@ def send_message_form():
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
-	username = request.form.get('username')
+	username = request.form.get('recipient_username')
 	user = User.query.filter_by(username=username).first_or_404()
-	current_user = User.query.filter(User.user_id== session['user_id'])
-	sender = current_user.username
+	current_user = User.query.filter(User.user_id== session['user_id']).first()
+	sender = current_user
 	body = request.form.get('body')
-	msg = Message(sender_username=sender, recipient_username=username, user=user,
-				  body=body)
+	msg = Message(sender=sender, recipient=user, recipient_username=user.username,
+				  body=body, sender_username=current_user.username)
 	db.session.add(msg)
 	db.session.commit()
-	flash(_('Your message has been sent.'))
-    return redirect(url_for('main.user', username=recipient))
+	flash('Your message has been sent.')
+	return redirect('/')
 
 @app.route('/users_profile/messages.html')
 def messages():
@@ -251,9 +251,9 @@ def messages():
 		current_user.last_message_read_time = datetime.utcnow()
 		db.session.commit()
 		#messages = current_user.messages_received.order_by(Message.timestamp.desc())
-		messages = Message.query.filter(Message.recipient_id =='{}'.format(u_id)).order_by(Message.message_id.desc())
+		messages = Message.query.filter(Message.recipient_id ==u_id).order_by(Message.message_id.desc())
 		message = messages.first()
-		return render_template('messages.html', message=message, messages=messages, current_user=current_user)  
+		return render_template('messages.html', messages=messages, current_user=current_user, message= message)  
 
 	
 
