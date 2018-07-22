@@ -133,7 +133,9 @@ def produce_add_process():
 def new_listing():
 	"""Shows newly made produce listing."""
 	produce = db.session.query(Produce).order_by(Produce.prod_id.desc()).first()
-	return render_template('/new_listing.html', prod_name=produce.prod_name, prod_type=produce.prod_type, avail_date=produce.avail_date, describe=produce.describe)
+	current_user = User.query.filter(User.user_id== session['user_id']).first()
+	return render_template('/new_listing.html', prod_name=produce.prod_name, prod_type=produce.prod_type, 
+							avail_date=produce.avail_date, describe=produce.describe, gardener=current_user.username)
 
 @app.route('/vegetables')
 def veg_directory():
@@ -157,13 +159,13 @@ def nut_directory():
 def seed_directory():
 	"""Directory of seed listings"""
 	seeds = Produce.query.filter_by(prod_id=4).all()
-	return render_template('/seeds.html')
+	return render_template('/seeds.html', seeds=seeds)
 
 @app.route('/herbs')
 def herbs_directory():
 	"""Directory of herb listings"""
 	herbs = Produce.query.filter_by(prod_id=3).all()
-	return render_template('/herbs.html')
+	return render_template('/herbs.html', herbs=herbs)
 
 @app.route('/garden_areas')
 def garden_directory():

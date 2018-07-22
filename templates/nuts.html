@@ -1,1 +1,12 @@
-<h2> This will be the nuts directory </h2>
+{% extends 'base.html' %}
+{% block content %}
+<h2>Nut Listings Directory</h2>
+{% for nut in nuts %}
+<h1>{{ nut.prod_name }}</h1><br>
+Available after: {{ nut.avail_date }}<br>
+Description: {{ nut.describe }}<br>
+{% endfor %}
+<form>
+    <button type="submit" formaction='../send_message'>Send A Gardener a Message</button>
+</form>
+{% endblock %}  

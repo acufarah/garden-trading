@@ -1,1 +1,12 @@
-<h2>This will be the seeds directory</h2>
+{% extends 'base.html' %}
+{% block content %}
+<h2>Seed Listings Directory</h2>
+{% for seed in seeds %}
+<h1>{{ seed.prod_name }}</h1><br>
+Available after: {{ seed.avail_date }}<br>
+Description: {{ seed.describe }}<br>
+{% endfor %}
+<form>
+    <button type="submit" formaction='../send_message'>Send A Gardener a Message</button>
+</form>
+{% endblock %}  

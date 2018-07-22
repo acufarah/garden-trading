@@ -1,1 +1,12 @@
-<h2>This will be the Fruits Directory</h2>
+{% extends 'base.html' %}
+{% block content %}
+<h2>Fruit Listings Directory</h2>
+{% for fruit in fruits %}
+<h1>{{ fruit.prod_name }}</h1><br>
+Available after: {{ fruit.avail_date }}<br>
+Description: {{ fruit.describe }}<br>
+{% endfor %}
+<form>
+    <button type="submit" formaction='../send_message'>Send A Gardener a Message</button>
+</form>
+{% endblock %}  
