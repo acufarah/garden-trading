@@ -16,19 +16,48 @@
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <a class="navbar-brand" href="#">GardenTrading</a>
+  <a class="navbar-brand" href="/">GardenTrading</a>
 
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+      <!-- Set up links on navigation bar -->
       <li class="nav-item active">
         <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="/garden_areas">Garden Map</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
+        <a class="nav-link" href="/vegetables">Vegetables</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/fruits">Fruits</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/herbs">Herbs</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/nuts">Nuts</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/seeds">Seeds</a>
+      </li>
+      {% if 'user_id' not in session %}
+      <li class="nav-item">
+        <a class="nav-link" href="/sign_up">Sign Up</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+      </li>
+      {% endif %}
+      {% if 'user_id' in session %}
+      <li class="nav-item">
+        <a class="nav-link" href="/users_profile/{{session.user_id}}">Your Profile</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+       {% endif %}
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -36,35 +65,7 @@
     </form>
   </div>
 </nav>
-<!-- Sign Up Button -->
-  {% if 'user_id' not in session %}
-  <div style='float:right'>
-    <form action='/sign_up'>
-    <input name='submit3' type='submit' id='submit3' value='sign_up'>
-  
-  </form>
-  </div>    
-  {% endif %}
-
-<!-- Login Button -->
-  {% if 'user_id' not in session %}
-  <div style='float:right'>
-    <form action='/login'>
-    <input name='submit1' type='submit' id='submit1' value='login'>
-  
-  </form>
-  </div>    
-  {% endif %}
-
-<!-- Logout Button -->
-  {% if 'user_id' in session %}
-  <div style='float:right'>
-    <form action='/logout'>
-    <input name='submit2' type='submit' id='submit2' value='logout'>
-  
-  </form>
-  </div>    
-  {% endif %}
+<!-- Flash messages -->
   <ul> 
     {% with messages = get_flashed_messages() %}
     {% if messages %}

@@ -6,7 +6,10 @@
 Available after: {{ nut.avail_date }}<br>
 Description: {{ nut.describe }}<br>
 {% endfor %}
+
+{% if 'user_id' in session %}
 <form>
     <button type="submit" formaction='../send_message'>Send A Gardener a Message</button>
 </form>
+{% endif %}
 {% endblock %}  

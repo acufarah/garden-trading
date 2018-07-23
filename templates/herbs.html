@@ -6,7 +6,9 @@
 Available after: {{ herb.avail_date }}<br>
 Description: {{ herb.describe }}<br>
 {% endfor %}
+{% if 'user_id' in session %}
 <form>
     <button type="submit" formaction='../send_message'>Send A Gardener a Message</button>
 </form>
+{% endif %}
 {% endblock %}  
