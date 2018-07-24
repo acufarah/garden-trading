@@ -47,6 +47,9 @@
     </style>
   </head>
   <body>
+{% extends 'base.html' %}
+{% set active_page = "garden_areas" %}
+{% block content %}
     <div class="container">
       <div class="options-box">
         <h1>Find Gardens in Your Area</h1>
@@ -68,10 +71,38 @@ function initMap() {
     zoom: 4,
     center: {lat: 37.335796 , lng: -121.885254}
   });
-// NOTE: This uses cross-domain XHR, and may not work on older browsers.
+  infowindow = new google.maps.InfoWindow(); 
+//Load GeoJSON data
   map.data.loadGeoJson( "/garden_areas.json");
+
+  map.data.addListener('click', function(event) {
+  // in the geojson feature that was clicked, get the "place" and "mag" attributes
+  let name = event.feature.getProperty("name");
+  let zipcode = event.feature.getProperty("zipcode");
+  let info = event.feature.getProperty("info"); 
+  let html = `username: ${name}\n zipcode: ${zipcode}\n info: ${info}`; // combine everything in properties to render in html
+  infowindow.setContent(html); // show the html variable in the infowindow
+  infowindow.setPosition(event.feature.getGeometry().get()); // anchor the infowindow at the marker
+  infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)}); // move the infowindow up slightly to the top of the marker icon
+  infowindow.open(map);
+}); 
 }
-        
+
+
+
+map.data.addListener('click', function(event) {
+  // in the geojson feature that was clicked, get the "place" and "mag" attributes
+  let name = event.feature.getProperty("name");
+  let zipcode = event.feature.getProperty("zipcode");
+  let info = event.feature.getProperty("info"); 
+  let html = name + zipcode + info; // combine everything in properties to render in html
+  infowindow.setContent(html); // show the html variable in the infowindow
+  infowindow.setPosition(event.feature.getGeometry().get()); // anchor the infowindow at the marker
+  infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)}); // move the infowindow up slightly to the top of the marker icon
+  infowindow.open(map);
+});   
+
+
       
     </script>
 
@@ -79,7 +110,7 @@ function initMap() {
         src=
         "https://maps.googleapis.com/maps/api/js?key=AIzaSyDpibo_0YQwz2T28Bh06cP9UX3ID-0yt-U&v=3&callback=initMap">
     </script>
-
+{% endblock %}
   </body>
 </html>
 

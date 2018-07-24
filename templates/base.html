@@ -21,37 +21,37 @@
   <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
     <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
       <!-- Set up links on navigation bar -->
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+      <li class="nav-item {% if active_page=='home'%}active{%endif %}">
+        <a class="nav-link" href="/">Home </a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='garden_areas' %}active{%endif %}">
         <a class="nav-link" href="/garden_areas">Garden Map</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='vegetables' %}active{%endif %}">
         <a class="nav-link" href="/vegetables">Vegetables</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='fruits' %}active{%endif %}">
         <a class="nav-link" href="/fruits">Fruits</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='herbs' %}active{%endif %}">
         <a class="nav-link" href="/herbs">Herbs</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='nuts' %}active{%endif %}">
         <a class="nav-link" href="/nuts">Nuts</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='seeds' %}active{%endif %}">
         <a class="nav-link" href="/seeds">Seeds</a>
       </li>
       {% if 'user_id' not in session %}
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='sign_up' %}active{%endif %}">
         <a class="nav-link" href="/sign_up">Sign Up</a>
       </li>
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='login' %}active{%endif %}">
         <a class="nav-link" href="/login">Login</a>
       </li>
       {% endif %}
       {% if 'user_id' in session %}
-      <li class="nav-item">
+      <li class="nav-item {% if active_page=='users_profile' %}active{%endif %}">
         <a class="nav-link" href="/users_profile/{{session.user_id}}">Your Profile</a>
       </li>
       <li class="nav-item">
@@ -85,9 +85,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
 
-<!-- For Dropzone image uploading -->
-
-<script src="./path/to/dropzone.js"></script>
 
 </body>
 </html>

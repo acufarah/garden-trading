@@ -181,8 +181,12 @@ def address_map():
 	for user in users:
 		lat = user.latitude
 		lng = user.longitude
+		username = user.username
+		zipcode = user.zipcode
+		gard_info = user.about_garden
 		loc_point = geojson.Point((user.longitude, user.latitude))
-		loc_json = geojson.Feature(geometry=loc_point)
+		loc_properties = dict(name=username, zipcode=zipcode, info=gard_info)
+		loc_json = geojson.Feature(geometry=loc_point, properties=loc_properties)
 		feature_lst.append(loc_json)
 	locs_json = geojson.FeatureCollection(feature_lst)
 	return jsonify(locs_json)
