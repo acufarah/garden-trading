@@ -7,6 +7,7 @@ from jinja2 import StrictUndefined
 from flask import (Flask, render_template, redirect, request, json, jsonify, url_for, flash, session)
 import os
 import geojson
+from lunr import lunr
 from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
@@ -190,6 +191,26 @@ def address_map():
 		feature_lst.append(loc_json)
 	locs_json = geojson.FeatureCollection(feature_lst)
 	return jsonify(locs_json)
+
+@app.route('/base.json')
+def full_text_search():
+	"""Make an index of information that can be used by lunr.js on the client side for full-text search"""
+	documents = []
+	produce = Produce.query.all()
+	for p in produce:
+		name = p.prod_name
+		p_type = p.prod_type
+		p_describe = p.describe
+		p_date = p.avail_date
+		p.id = str(p.prod_id)
+		body = dict(type=p_type, name=name, date=p_date)
+		lunr_ready = dict( id=p.id, title=name, body=body)
+		documents.append(lunr_ready)
+	#idx = lunr( ref='id', fields=('title', 'body'), documents=documents)
+	return jsonify(documents)
+
+
+
 
 
 @app.route('/users_profile/img_upload.html')

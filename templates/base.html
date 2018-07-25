@@ -60,7 +60,7 @@
        {% endif %}
     </ul>
     <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <input class="form-control mr-sm-2" type="search" id="search" placeholder="Search" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
   </div>
@@ -79,12 +79,43 @@
 </ul>
 
   {% block content %} put your content here {% endblock %}
+<!-- JS for search function -->
+<script>
+$.getJSON('/base.json', function (response) {
+        // Create index
+        index = lunr.Index.load(response.index);   
+        // Handle search
+        $('input#search').on('keyup', function () {
+            // Get query
+            var query = $(this).val();
+            // Search for it
+            var result = index.search(query);
+            // Output it
+            var resultdiv = $('ul.searchresults');
+            if (result.length === 0) {
+                // Hide results
+                resultdiv.hide();
+            } else {
+                // Show results
+                resultdiv.empty();
+                for (var item in result) {
+                    var ref = result[item].ref;
+                    var searchitem = '<li><a href='' + ref + ''></a></li>';
+                    resultdiv.append(searchitem);
+                }
+                resultdiv.show();
+            }
+        });
+    });
+}); 
+</script>
 <!-- JS tags for Bootstrap -->
 
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js" integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T" crossorigin="anonymous"></script>
-
+<!-- JS tag for Lunr.js for search -->
+<script src="https://unpkg.com/lunr/lunr.js"></script>
 
 </body>
 </html>
