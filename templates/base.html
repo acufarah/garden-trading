@@ -6,65 +6,67 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!--Bootstrap 4 CSS-->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-
+  <link rel="stylesheet" type="text/css" href="static/css/main.css">
   <title>Garden Trading</title>
 </head>
 
 <body>
+<div class="shadow p-3 mb-5 bg-white rounded">
+  <nav class="navbar navbar-expand-lg navbar-light bg-success">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="/">GardenTrading</a>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-success">
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <a class="navbar-brand" href="/">GardenTrading</a>
-
-  <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
-    <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-      <!-- Set up links on navigation bar -->
-      <li class="nav-item {% if active_page=='home'%}active{%endif %}">
-        <a class="nav-link" href="/">Home </a>
-      </li>
-      <li class="nav-item {% if active_page=='garden_areas' %}active{%endif %}">
-        <a class="nav-link" href="/garden_areas">Garden Map</a>
-      </li>
-      <li class="nav-item {% if active_page=='vegetables' %}active{%endif %}">
-        <a class="nav-link" href="/vegetables">Vegetables</a>
-      </li>
-      <li class="nav-item {% if active_page=='fruits' %}active{%endif %}">
-        <a class="nav-link" href="/fruits">Fruits</a>
-      </li>
-      <li class="nav-item {% if active_page=='herbs' %}active{%endif %}">
-        <a class="nav-link" href="/herbs">Herbs</a>
-      </li>
-      <li class="nav-item {% if active_page=='nuts' %}active{%endif %}">
-        <a class="nav-link" href="/nuts">Nuts</a>
-      </li>
-      <li class="nav-item {% if active_page=='seeds' %}active{%endif %}">
-        <a class="nav-link" href="/seeds">Seeds</a>
-      </li>
-      {% if 'user_id' not in session %}
-      <li class="nav-item {% if active_page=='sign_up' %}active{%endif %}">
-        <a class="nav-link" href="/sign_up">Sign Up</a>
-      </li>
-      <li class="nav-item {% if active_page=='login' %}active{%endif %}">
-        <a class="nav-link" href="/login">Login</a>
-      </li>
-      {% endif %}
-      {% if 'user_id' in session %}
-      <li class="nav-item {% if active_page=='users_profile' %}active{%endif %}">
-        <a class="nav-link" href="/users_profile/{{session.user_id}}">Your Profile</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/logout">Logout</a>
-      </li>
-       {% endif %}
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="search" id="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+      <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <!-- Set up links on navigation bar -->
+        <li class="nav-item {% if active_page=='home'%}active{%endif %}">
+          <a class="nav-link" href="/">Home </a>
+        </li>
+        <li class="nav-item {% if active_page=='garden_areas' %}active{%endif %}">
+          <a class="nav-link" href="/garden_areas">Garden Map</a>
+        </li>
+        <li class="nav-item {% if active_page=='vegetables' %}active{%endif %}">
+          <a class="nav-link" href="/vegetables">Vegetables</a>
+        </li>
+        <li class="nav-item {% if active_page=='fruits' %}active{%endif %}">
+          <a class="nav-link" href="/fruits">Fruits</a>
+        </li>
+        <li class="nav-item {% if active_page=='herbs' %}active{%endif %}">
+          <a class="nav-link" href="/herbs">Herbs</a>
+        </li>
+        <li class="nav-item {% if active_page=='nuts' %}active{%endif %}">
+          <a class="nav-link" href="/nuts">Nuts</a>
+        </li>
+        <li class="nav-item {% if active_page=='seeds' %}active{%endif %}">
+          <a class="nav-link" href="/seeds">Seeds</a>
+        </li>
+        {% if 'user_id' not in session %}
+        <li class="nav-item {% if active_page=='sign_up' %}active{%endif %}">
+          <a class="nav-link" href="/sign_up">Sign Up</a>
+        </li>
+        <li class="nav-item {% if active_page=='login' %}active{%endif %}">
+          <a class="nav-link" href="/login">Login</a>
+        </li>
+        {% endif %}
+        {% if 'user_id' in session %}
+        <li class="nav-item {% if active_page=='users_profile' %}active{%endif %}">
+          <a class="nav-link" href="/users_profile/{{session.user_id}}">Your Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+         {% endif %}
+      </ul>
+      <form class="form-inline my-2 my-lg-0" method="POST" action="/search_results">
+        <input class="form-control mr-sm-2" type="search" id="search" name="search" placeholder="Search Produce" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+</div>
+<div class="container shadow p-3 mb-5 bg-white rounded">
 <!-- Flash messages -->
   <ul> 
     {% with messages = get_flashed_messages() %}
@@ -79,6 +81,7 @@
 </ul>
 
   {% block content %} put your content here {% endblock %}
+</div>
 <!-- JS for search function -->
 <script>
 $.getJSON('/base.json', function (response) {

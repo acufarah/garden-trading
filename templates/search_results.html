@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% set active_page = "search_results" %}
+{% block content %}
+<h1>Search Results</h2>
+
+{% for result in results %}
+{{result}}
+{% endfor %}
+
+{% endblock %}

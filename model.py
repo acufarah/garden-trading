@@ -3,17 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
-ma = Marshmallow()
 ##############################################################################
 # Model definitions
 
 class User(db.Model):
     """User of garden trading website."""
-
     __tablename__ = "users"
+    __searchable__ = ['username', 'zipcode', 'about_me', 'about_garden']
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
@@ -64,6 +62,7 @@ def __repr__(self):
 class Produce(db.Model):
     """Produce available from gardens."""
     __tablename__ = "produce"
+    __searchable__ = ['prod_name', 'prod_type', 'describe', 'avail_date']
 
     prod_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
@@ -96,45 +95,35 @@ def __repr__(self):
         return '<Message {}>'.format(self.body)
 
 
-class UserSchema(ma.ModelSchema):
-    class Meta:
-        model = User
-
-class ProduceSchema(ma.ModelSchema):
-    class Meta:
-        model = Produce
-
-class MessageSchema(ma.ModelSchema):
-    class Meta:
-        model = Message
-
-def init_app():
-    # So that we can use Flask-SQLAlchemy, we'll make a Flask app.
-	from flask import Flask
-	from flask_login import LoginManager, UserMixin
-
-	app = Flask(__name__)
-	login = LoginManager(app)
-
-	connect_to_db(app)
-	print("Connected to DB.")
-
-
-def connect_to_db(app):
+def connect_to_db(app, db_uri= 'postgres:///garden'):
     """Connect the database to our Flask app."""
-
     # Configure to use our database.
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres:///garden'
-    app.config['SQLALCHEMY_ECHO'] = False
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+    #app.config['SQLALCHEMY_ECHO'] = False
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.app = app
     db.init_app(app)
+
+
+
+def example_data():
+    """Create example data for the test database."""
+    # FIXME: write a function that creates a game and adds it to the database.
+    user1 = User(username="gardenlover", email="gardenlover@gmail.com", password="gardenlover", fname="Jane", lname="Garden", address="3120 De La Cruz Blvd", city="Santa Clara", state="CA", zipcode=95054)
+    db.session.add(user1)
+    user2= User(username="herbie", email="herbie@gmail.com", password="herbie", fname="Herb", lname="Garden", address="3120 De la Cruz Blvd", city="Santa Clara", state="CA", zipcode=95054)
+    db.session.add(user2)
+    produce1= Produce(user_id=1, prod_name='tomatoes', prod_type= 1, describe='Yummy organic brandywine tomatoes', avail_date='08/01/2018')
+    db.session.add(produce1)
+    db.session.commit()
 
 
 if __name__ == "__main__":
     # As a convenience, if we run this module interactively, it will leave
     # you in a state of being able to work with the database directly.
+    from flask import Flask
 
-    from server import app
+    app = Flask(__name__)
     connect_to_db(app)
     print("Connected to DB.")
