@@ -1,15 +1,33 @@
 {% extends 'base.html' %}
 {% set active_page = "herbs" %}
 {% block content %}
-<h2>Herb Listings Directory</h2>
+<h2 class="text-center">Herb Listings Directory</h2>
 {% for herb in herbs %}
-<h1>{{ herb.prod_name }}</h1><br>
-Available after: {{ herb.avail_date }}<br>
-Description: {{ herb.describe }}<br>
+<div class="row">>
+   <div class="col-md-4 col-lg-4 col-sm-12">
+    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+     <div class="card-img">
+      <img src="#" class="img-fluid">
+     </div>
+     
+     	<div class="card-body">
+     		<center>
+			<h4 class="card-title"{{ herb.prod_name }}</h4><br>
+			<p class="card-text">
+			Available after: {{ herb.avail_date }}<br>
+			Description: {{ herb.describe }}<br>
+		</p>
+		    </center>
+		</div>
+     <div class="card-footer">
+ 	   
+     	{% if 'user_id' in session %}
+     	<a class="btn btn-success btn-lg" href="../send_message" role="button">Send Gardener A Message</a>	
+      {% endif %}
+  	</div>
+     </div>
+    </div>
+   </div>
 {% endfor %}
-{% if 'user_id' in session %}
-<form>
-    <button type="submit" formaction='../send_message'>Send A Gardener a Message</button>
-</form>
-{% endif %}
 {% endblock %}  
+ 

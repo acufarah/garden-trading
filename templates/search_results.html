@@ -3,8 +3,13 @@
 {% block content %}
 <h1>Search Results</h2>
 
-{% for result in results %}
-{{result}}
+{% for p in prod %}
+<p>
+{{p.prod_name}}<br>
+{{p.prod_type}}<br>
+{{p.describe}}<br>
+{{p.avail_date}}<br>
+</p>
 {% endfor %}
 
 {% endblock %}

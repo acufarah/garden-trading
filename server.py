@@ -12,7 +12,6 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
 from geopy.geocoders import Nominatim
-import flask_whooshalchemy as wa
 from model import User, Produce, Message, connect_to_db, db
 #from model import UserSchema, ProduceSchema, MessageSchema
 
@@ -72,6 +71,7 @@ def sign_up_process():
 
 @app.route('/login', methods=["POST"])
 def process_login_form():
+    """Get information from login form"""
     email = request.form.get('email')
     password = request.form.get('password')
 
@@ -87,12 +87,13 @@ def process_login_form():
 
 @app.route('/login')
 def show_login_form():
+    """Render login form"""
     return render_template("login.html")
 
 
 @app.route('/users_profile/<int:uid>')
 def show_user_info(uid):
-
+    """render user profile"""
     print("User UID is: {}".format(uid))
 
     user = User.query.get(uid)
@@ -102,6 +103,7 @@ def show_user_info(uid):
 
 @app.route('/logout')
 def logout():
+    """Create logout process"""
     if 'user_id' in session:
         session.pop('user_id', None)
         flash('You are now logged out')
@@ -142,31 +144,31 @@ def new_listing():
 @app.route('/vegetables')
 def veg_directory():
     """Directory of vegetable listings"""
-    vegetables = Produce.query.filter_by(prod_id=1).all()
+    vegetables = Produce.query.filter_by(prod_type=1).all()
     return render_template('/vegetables.html', vegetables=vegetables)
 
 @app.route('/fruits')
 def fruit_directory():
     """Directory of fruit listings"""
-    fruits = Produce.query.filter_by(prod_id=2).all()
+    fruits = Produce.query.filter_by(prod_type=2).all()
     return render_template('/fruits.html', fruits=fruits)
 
 @app.route('/nuts')
 def nut_directory():
     """Directory of nut listings"""
-    nuts = Produce.query.filter_by(prod_id=5).all()
+    nuts = Produce.query.filter_by(prod_type=5).all()
     return render_template('/nuts.html', nuts=nuts)
 
 @app.route('/seeds')
 def seed_directory():
     """Directory of seed listings"""
-    seeds = Produce.query.filter_by(prod_id=4).all()
+    seeds = Produce.query.filter_by(prod_type=4).all()
     return render_template('/seeds.html', seeds=seeds)
 
 @app.route('/herbs')
 def herbs_directory():
     """Directory of herb listings"""
-    herbs = Produce.query.filter_by(prod_id=3).all()
+    herbs = Produce.query.filter_by(prod_type=3).all()
     return render_template('/herbs.html', herbs=herbs)
 
 @app.route('/garden_areas')
@@ -212,6 +214,7 @@ def full_text_search():
 
 @app.route('/search_results', methods=['POST'])
 def search_results():
+    """Render search results from search input"""
     query = request.form.get('search')
     documents = []
     produce = Produce.query.all()
@@ -228,10 +231,16 @@ def search_results():
 
     idx = lunr( ref='id', fields=('title', 'body'), documents=documents )
     results= idx.search(query)
+    prod = []
+    for result in results:
+        ref = int(result.get('ref'))
+        p = Produce.query.filter(Produce.prod_id == ref ).one()
+        prod.append(p)
 
     return render_template('/search_results.html',
                            query=query,
-                           results=results)
+                           results=results,
+                           prod=prod)
 
 @app.route('/users_profile/img_upload.html')
 def img_upload_form():
@@ -240,44 +249,51 @@ def img_upload_form():
 
 @app.route('/users_profile/img_upload.html', methods=['POST'])
 def img_upload():
+    """Image uploader for site"""
     if 'user_id' in session:
         user_id = session.get('user_id')
 
-        f1 = request.files['usr_img']
-        filename1 = secure_filename(f1.filename)
-        f1.save(os.path.join(app.config['UPLOAD_FOLDER'], filename1))
-        user_in_session = User.query.get(user_id)
-        user_in_session.usr_img = filename1
-        user_in_session.user_img_url = f"{(app.config['UPLOAD_FOLDER'])}//{filename1}"
-        db.session.commit()
-        flash("Photo uploaded and stored successfully") 
-        """f2 = request.files['prod_img']
-        filename2 = secure_filename(f2.filename)
-        f2.save(os.path.join(app.config['UPLOAD_FOLDER'], filename2))
-        produce = db.session.query(Produce).order_by(Produce.prod_id.desc()).first()
-        produce.prod_img = filename2
-        produce.prod_img_url = f"{(app.config['UPLOAD_FOLDER'])}//{filename2}"
-        db.session.commit()
-        flash("Photo uploaded and stored successfully") 
+        f1 = request.files.get('usr_img')
+        if f1!= None:
+            filename1 = secure_filename(f1.filename)
+            f1.save(os.path.join(app.config['UPLOAD_FOLDER'], "profile_pics/", filename1))
+            user_in_session = User.query.get(user_id)
+            user_in_session.usr_img = filename1
+            user_in_session.user_img_url = f"{(app.config['UPLOAD_FOLDER'])}//profile_pics//{filename1}"
+            db.session.commit()
+            flash("Photo uploaded and stored successfully") 
+    
+        f2 = request.files.get('prod_img')
+        if f2!= None:
+            filename2 = secure_filename(f2.filename)
+            f2.save(os.path.join(app.config['UPLOAD_FOLDER'], "prod_img/", filename2))
+            produce = db.session.query(Produce).order_by(Produce.prod_id.desc()).first()
+            produce.prod_img = filename2
+            produce.prod_img_url = f"{(app.config['UPLOAD_FOLDER'])}//prod_img//{filename2}"
+            db.session.commit()
+            flash("Photo uploaded and stored successfully") 
 
-        f3 = request.files['gard_img']
-        filename3 = secure_filename(f3.filename)
-        f3.save(os.path.join(app.config['UPLOAD_FOLDER'], filename3))
-        user_in_session = User.query.get(user_id)
-        user_in_session.gard_img = filename3
-        user_in_session.gard_img_url = f"{(app.config['UPLOAD_FOLDER'])}//{filename3}"
-        db.session.commit()
-        flash("Photo uploaded and stored successfully") """
-        return redirect('/users_profile/{}'.format(user_id))
+        f3 = request.files.get('gard_img')
+        if f3!= None:
+            filename3 = secure_filename(f3.filename)
+            f3.save(os.path.join(app.config['UPLOAD_FOLDER'], "gard_img/", filename3))
+            user_in_session = User.query.get(user_id)
+            user_in_session.gard_img = filename3
+            user_in_session.gard_img_url = f"{(app.config['UPLOAD_FOLDER'])}//gard_img//{filename3}"
+            db.session.commit()
+            flash("Photo uploaded and stored successfully")
+            return redirect('/users_profile/{}'.format(user_id))
 
 
 
 @app.route('/send_message')
 def send_message_form():
+    """Render message form"""
     return render_template('send_message.html')
 
 @app.route('/send_message', methods=['POST'])
 def send_message():
+    """Get message input to store and send"""
     username = request.form.get('recipient_username')
     user = User.query.filter_by(username=username).first_or_404()
     current_user = User.query.filter(User.user_id== session['user_id']).first()
@@ -292,6 +308,7 @@ def send_message():
 
 @app.route('/users_profile/messages.html')
 def messages():
+    """Check messages route"""
     if 'user_id' in session:
         u_id = session.get('user_id')
         current_user = User.query.filter(User.user_id== session['user_id'])
@@ -316,5 +333,4 @@ if __name__ == "__main__":
 
     # Use the DebugToolbar
     DebugToolbarExtension(app)
-    wa.whoosh_index(app, Produce)
     app.run(port=5000, host='0.0.0.0')
