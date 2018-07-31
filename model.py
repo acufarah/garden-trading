@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_bcrypt import Bcrypt
+from flask_migrate import Migrate
 
 db = SQLAlchemy()
 ##############################################################################
@@ -16,8 +18,7 @@ class User(db.Model):
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(255), nullable=False)
-    #password_hash = db.Column(db.String(128), nullable=False)
-    password = db.Column(db.String(100), nullable=False)
+    password = db.Column(db.Binary(128), nullable=False)
     fname = db.Column(db.String(55), nullable=False)
     lname = db.Column(db.String(55), nullable=False)
     address = db.Column(db.String(120), nullable=False)
@@ -33,6 +34,7 @@ class User(db.Model):
     about_garden = db.Column(db.Text, nullable=True)
     gard_img= db.Column(db.String, default=None, nullable=True)
     gard_img_url = db.Column(db.String, default=None, nullable=True)
+
 
     #Create relationships for messaging.
 
@@ -98,13 +100,13 @@ def __repr__(self):
 def connect_to_db(app, db_uri= 'postgres:///garden'):
     """Connect the database to our Flask app."""
     # Configure to use our database.
-
+    
     app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
-    #app.config['SQLALCHEMY_ECHO'] = False
+    app.config['SQLALCHEMY_ECHO'] = True
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
     db.app = app
     db.init_app(app)
-
+    migrate = Migrate(app, db)
 
 
 def example_data():
@@ -125,5 +127,6 @@ if __name__ == "__main__":
     from flask import Flask
 
     app = Flask(__name__)
+
     connect_to_db(app)
     print("Connected to DB.")

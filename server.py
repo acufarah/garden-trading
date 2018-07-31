@@ -12,7 +12,8 @@ from flask_uploads import UploadSet, IMAGES, configure_uploads
 from flask_debugtoolbar import DebugToolbarExtension
 from werkzeug import secure_filename
 from geopy.geocoders import Nominatim
-from model import User, Produce, Message, connect_to_db, db
+from model import User, Produce, Message, connect_to_db, db, Bcrypt
+
 #from model import UserSchema, ProduceSchema, MessageSchema
 
 
@@ -55,6 +56,8 @@ def sign_up_process():
     location = geolocator.geocode(full_address)
     latitude = location.latitude
     longitude = location.longitude
+    pw_hash = bcrypt.generate_password_hash(password)
+
     if User.query.filter_by(username='username').first():
         flash("User with this username already exists.")
     elif User.query.filter_by(email='email').first():
@@ -62,7 +65,7 @@ def sign_up_process():
         return redirect('/')
     else:
         #Store new user info in DB
-        new_user = User(username=username, email=email, password=password, fname=fname, lname=lname,
+        new_user = User(username=username, email=email, password=pw_hash, fname=fname, lname=lname,
                         address=address, city=city, state=state, zipcode=zipcode, full_address=full_address, latitude=latitude, longitude=longitude)
         db.session.add(new_user)
         db.session.commit()
@@ -73,14 +76,16 @@ def sign_up_process():
 def process_login_form():
     """Get information from login form"""
     email = request.form.get('email')
-    password = request.form.get('password')
+    password1 = request.form.get('password')
 
 
-    user = User.query.filter_by(email=email, password=password).first()
+    user = User.query.filter_by(email=email).first()
     if user:
-        flash("Login successful.")
-        session['user_id'] = user.user_id
-        return redirect('/users_profile/{}'.format(user.user_id))
+        authenticated_user = bcrypt.check_password_hash(user.password, password1)
+        if authenticated_user:
+            flash("Login successful.")
+            session['user_id'] = user.user_id
+            return redirect('/users_profile/{}'.format(user.user_id))
     else:
         flash("Login unsuccessful.")
         return redirect('/login')
@@ -126,8 +131,9 @@ def produce_add_process():
     prod_type = request.form.get('prod_type')
     avail_date = request.form.get('avail_date')
     describe = request.form.get('describe')
+    user_id = session.get('user_id')
 
-    new_produce = Produce(prod_name=prod_name, prod_type=prod_type, avail_date=avail_date, describe=describe)
+    new_produce = Produce(prod_name=prod_name, prod_type=prod_type, avail_date=avail_date, describe=describe, user_id=user_id)
     db.session.add(new_produce)
     db.session.commit()
     flash("Produce successfully added to database")
@@ -139,7 +145,7 @@ def new_listing():
     produce = db.session.query(Produce).order_by(Produce.prod_id.desc()).first()
     current_user = User.query.filter(User.user_id== session['user_id']).first()
     return render_template('/new_listing.html', prod_name=produce.prod_name, prod_type=produce.prod_type, 
-                            avail_date=produce.avail_date, describe=produce.describe, gardener=current_user.username)
+                            avail_date=produce.avail_date, describe=produce.describe, gardener=current_user.username, prod_img=produce.prod_img)
 
 @app.route('/vegetables')
 def veg_directory():
@@ -262,6 +268,7 @@ def img_upload():
             user_in_session.user_img_url = f"{(app.config['UPLOAD_FOLDER'])}//profile_pics//{filename1}"
             db.session.commit()
             flash("Photo uploaded and stored successfully") 
+            return redirect('/users_profile/{}'.format(user_id))
     
         f2 = request.files.get('prod_img')
         if f2!= None:
@@ -271,7 +278,8 @@ def img_upload():
             produce.prod_img = filename2
             produce.prod_img_url = f"{(app.config['UPLOAD_FOLDER'])}//prod_img//{filename2}"
             db.session.commit()
-            flash("Photo uploaded and stored successfully") 
+            flash("Photo uploaded and stored successfully")
+            return redirect('/new_listing') 
 
         f3 = request.files.get('gard_img')
         if f3!= None:
@@ -330,7 +338,7 @@ if __name__ == "__main__":
     app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app)
-
+    bcrypt = Bcrypt(app)
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')

@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
+{% set active_page = "new_listing" %}
 {% block content %}
 <h2>New Listing</h2>
+    <figure>
+  <img src="/static/uploads/prod_img/{{prod_img}}"
+       alt="User photo"
+       width="250"
+       height="250">
+</figure>
   <ul>
   	<li>
   		Name: {{prod_name}}<br>
@@ -22,6 +29,6 @@
   	</li>
  </ul>
 
- <a href="img_upload.html">Add a photo of your produce or garden</a>
+ <a href="users_profile/img_upload.html">Add a photo of your produce or garden</a>
 
 {% endblock %}  
