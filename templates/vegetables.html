@@ -1,46 +1,83 @@
 {% extends 'base.html' %}
 {% set active_page = "vegetables" %}
 {% block content %}
+<div class="page-header">
 <h2 class="text-center">Vegetable Listings Directory</h2>
+</div>
+  <div class="row">
+    
 {% for vegetable in vegetables %}
-     <div class="row">
-       <div class="col-md-4 col-lg-4 col-sm-12">
-        <div class="card shadow-lg p-3 mb-5 bg-white rounded">
-         <div class="card-img">
-          <img src="/static/uploads/prod_img/{{vegetable.prod_img}}" class="img-fluid img-thumbnail">
-         </div>
-         	<div class="card-body">
-         		<center>
-      		<p class="card-text">	
-          <dl>
-            <dt><h3>{{ vegetable.prod_name}}</h3></dt>
-            <dd>{{ vegetable.describe }}</dd>
-      		  <dt>Available:</dt>
-            <dd>{{ vegetable.avail_date }}</dd>
-          </dl>
-          </p>
-          <figure>
-          <img src="/static/uploads/profile_pics/{{vegetable.user.usr_img}}"class="img-fluid img-thumbnail" alt="User photo"
-           width="100"
-           height="100">
-          </figure>
-      	    </center>
-      	</div>
-         <div class="card-footer">
-         	{% if 'user_id' in session %}
-         	<form>
-         	<center>
-         	<a class="btn btn-success btn-lg" href="../send_message" role="button">Send {{ vegetable.user.username }} a message</a>	
-        	<!-- <button type="submit" formaction='../send_message'>Send Gardener a Message</button> -->
-        	</center>
-      	</form>
-      </div>
+  
+        <div class="col-md-4 col-lg-4 col-sm-12">
+         <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+
+               <div class="card-img">
+                  <img src="/static/uploads/prod_img/{{vegetable.prod_img}}" class="img-fluid img-thumbnail">
+                  </div>
+               	<div class="card-body">
+               		<center>
+            		    <p class="card-text">	
+                      <dl>
+                      <dt><h3>{{ vegetable.prod_name}}</h3></dt>
+                      <dd>{{ vegetable.describe }}</dd>
+            		      <dt>Available:</dt>
+                      <dd>{{ vegetable.avail_date }}</dd>
+                      </dl>
+                    </p>
+                    <figure>
+                      <img src="/static/uploads/profile_pics/{{vegetable.user.usr_img}}"class="img-fluid img-thumbnail" alt="User photo"
+                      width="100"
+                      height="100">
+                    </figure>
+            	    </center>
+            	</div>
+               <div class="card-footer">
+               	{% if 'user_id' in session %}
+               	<form>
+               	<center>
+               	<a class="btn btn-success btn-lg btn-block mButton"  href="../send_message" role="button" value={{vegetable.user.username|tojson|safe}}>Send {{ vegetable.user.username }} <br> a message</a>
+               
+              	<!-- <button type="submit" formaction='../send_message'>Send Gardener a Message</button> -->
+              	</center>
+            	  </form>
+              </div>
           <!-- <a href='../send_message' class="card-link">Send A Gardener a Message</a> -->
           {% endif %}
+      
         </div>
-         </div>
+      </div>
+  
+   
 
-        </div>
+ 
 {% endfor %}
+  
+</div>
+ <script>
 
+  const mButtons = document.getElementsByClassName("btn btn-success btn-lg btn-block mButton");
+
+  // const buttonText = (mButton.innerHTML);
+
+  // let buttonList = buttonText.split(" ");
+
+  // let usernameInfo = buttonList[1];
+
+  // console.log(usernameInfo);
+  const len = mButtons.length;
+  console.log(mButtons);
+  console.log(len);
+  for (i = 0; i < len; i++) { 
+      mButtons[i].addEventListener("click", function(event) {
+        const buttonList = event.target.innerHTML.split(' ');
+        const usernameInfo = buttonList[1];
+        localStorage.setItem('userNameInfo', usernameInfo);
+        console.log(localStorage.getItem('userNameInfo'));
+  });}
+   
+
+
+            
+                        
+  </script> 
 {% endblock %}  

@@ -18,6 +18,7 @@ from model import User, Produce, Message, connect_to_db, db, Bcrypt
 
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 app.config.from_object(__name__)
 app.config['UPLOAD_FOLDER'] = "/home/vagrant/src/gardenproject/static/uploads"
 
@@ -338,7 +339,7 @@ if __name__ == "__main__":
     app.jinja_env.auto_reload = app.debug
 
     connect_to_db(app)
-    bcrypt = Bcrypt(app)
+   
     # Use the DebugToolbar
     DebugToolbarExtension(app)
     app.run(port=5000, host='0.0.0.0')

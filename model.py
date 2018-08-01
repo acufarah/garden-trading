@@ -2,7 +2,7 @@
 from flask_sqlalchemy import SQLAlchemy
 import json
 from datetime import datetime
-from werkzeug.security import generate_password_hash, check_password_hash
+# from werkzeug.security import generate_password_hash, check_password_hash
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
 
@@ -109,12 +109,19 @@ def connect_to_db(app, db_uri= 'postgres:///garden'):
     migrate = Migrate(app, db)
 
 
-def example_data():
+def example_data(bcrypt):
     """Create example data for the test database."""
-    # FIXME: write a function that creates a game and adds it to the database.
-    user1 = User(username="gardenlover", email="gardenlover@gmail.com", password="gardenlover", fname="Jane", lname="Garden", address="3120 De La Cruz Blvd", city="Santa Clara", state="CA", zipcode=95054)
+    password = bcrypt.generate_password_hash("gardenlover")
+    user1 = User(username="gardenlover", email="gardenlover@gmail.com",
+                 fname="Jane", lname="Garden", address="3120 De La Cruz Blvd", 
+                 city="Santa Clara", state="CA", zipcode=95054, 
+                 password=password) 
     db.session.add(user1)
-    user2= User(username="herbie", email="herbie@gmail.com", password="herbie", fname="Herb", lname="Garden", address="3120 De la Cruz Blvd", city="Santa Clara", state="CA", zipcode=95054)
+    password2 = bcrypt.generate_password_hash("herbie")
+    user2= User(username="herbie", email="herbie@gmail.com", 
+                
+                fname="Herb", lname="Garden", address="3120 De la Cruz Blvd", city="Santa Clara", state="CA", zipcode=95054, 
+                password=password2)
     db.session.add(user2)
     produce1= Produce(user_id=1, prod_name='tomatoes', prod_type= 1, describe='Yummy organic brandywine tomatoes', avail_date='08/01/2018')
     db.session.add(produce1)

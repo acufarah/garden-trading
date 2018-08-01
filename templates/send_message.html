@@ -12,7 +12,7 @@
  	  	<div class="col-sm-10">
  	  	  Enter your username: <input type='text' name='sender_username' class='form-control' required><br>
       
-      	  Enter recipient's username: <input type='text' name='recipient_username' class='form-control' required><br>
+      	  Enter recipient's username: <input type='text' name='recipient_username' class='form-control' id="recipient" required><br>
 
           Enter message here:<input type="textarea" name="body" class="form-control" id="body" placeholder="body"><br>
 
@@ -23,6 +23,11 @@
   </div>
 </form>
 
+<script>
+ const recipient = localStorage.getItem('userNameInfo');
+
+ document.getElementById('recipient').value = recipient;
+</script>
 
 
 {% endblock %}  

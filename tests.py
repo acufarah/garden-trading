@@ -1,7 +1,7 @@
 import unittest
 
 from server import app
-from model import db, example_data, connect_to_db
+from model import db, example_data, connect_to_db, Bcrypt
 
 
 class GardenTests(unittest.TestCase):
@@ -13,10 +13,11 @@ class GardenTests(unittest.TestCase):
 
         # Connect to test database (uncomment when testing database)
         connect_to_db(app, "postgresql:///testdb")
-
+        bcrypt = Bcrypt(app)
         # Create tables and add sample data (uncomment when testing database)
+        db.drop_all()
         db.create_all()
-        example_data()
+        example_data(bcrypt)
 
 
     def test_home(self):
@@ -108,17 +109,32 @@ class GardenTestsDatabase(unittest.TestCase):
 
         self.client = app.test_client()
         app.config['TESTING'] = True
-
+        app.config['SECRET_KEY'] = 'key'
         # Connect to test database (uncomment when testing database)
         connect_to_db(app, "postgresql:///testdb")
-
+        bcrypt = Bcrypt(app)
         # Create tables and add sample data (uncomment when testing database)
+        db.drop_all()
         db.create_all()
-        example_data()
+        example_data(bcrypt)
 
         with self.client as c:
             with c.session_transaction() as sess:
                 sess['user_id'] = 1
+
+
+
+    def users_profile(self):
+        """Does the user profile page render using the user id in session"""
+        result = self.client.get('/users_profile/{}'.format(user.user_id))
+        self.assertIn(b'User Profile', result.data)
+
+    def test_after_login(self):
+        """Do login and sign up show on navbar"""
+        result = self.client.get('/')
+        self.assertNotIn(b'Sign Up', result.data)
+        self.assertNotIn(b'Login', result.data)
+        self.assertIn(b'Logout', result.data)
 
     def tearDown(self):
         """Do at end of every test."""
