@@ -50,17 +50,21 @@
 {% extends 'base.html' %}
 {% set active_page = "garden_areas" %}
 {% block content %}
-    <div class="container">
-      <div class="options-box">
-        <h1>Find Gardens in Your Area</h1>
-        <!-- <div>
-          <input id="show-listings" type="button" value="Show Listings">
-          <input id="hide-listings" type="button" value="Hide Listings">
-        </div> -->
-      </div>
-      <div id="map"></div>
-    </div>
-    <script>
+
+                 <div class="container">
+                    <div class="options-box">
+                      <br>  <h1>Find Gardens in Your Area</h1>
+                      <div><br>
+                        <input id="show-listings" type="button" value="Show Listings">
+                        <input id="hide-listings" type="button" value="Hide Listings">
+                      </div>
+                    </div>
+                    <div id="map"></div><br>
+                  </div>
+
+
+
+<script>
  // $.getJSON( "/garden_areas.json", function( data ) {
  //   console.log( data ) });
 

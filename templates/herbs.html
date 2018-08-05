@@ -1,9 +1,14 @@
 {% extends 'base.html' %}
 {% set active_page = "herbs" %}
 {% block content %}
-<h2 class="text-center">Herb Listings Directory</h2>
+<div class="container shadow-lg p-3 mb-5 bg-white rounded">
+<center>
+<img class="image-fluid" src="static/images/herb-heading.jpg">
+</center>
+</div>
+<div class="row">
 {% for herb in herbs %}
-<div class="row">>
+
    <div class="col-md-4 col-lg-4 col-sm-12">
     <div class="card shadow-lg p-3 mb-5 bg-white rounded">
      <div class="card-img">
@@ -22,12 +27,29 @@
      <div class="card-footer">
  	   
      	{% if 'user_id' in session %}
-     	<a class="btn btn-success btn-lg" href="../send_message" role="button">Send Gardener A Message</a>	
+     	<a class="btn btn-success btn-lg btn-block mButton" href="../send_message" role="button">Send {{ herb.user.username }} A Message</a>	
       {% endif %}
   	</div>
      </div>
     </div>
-   </div>
+   
 {% endfor %}
+</div>
+<script>
+ //Add recipient username from button to local storage in order to retrieve info on send messages page.
+  const mButtons = document.getElementsByClassName("btn btn-success btn-lg btn-block mButton");
+  const len = mButtons.length;
+  console.log(mButtons);
+  console.log(len);
+  for (i = 0; i < len; i++) { 
+      mButtons[i].addEventListener("click", function(event) {
+        const buttonList = event.target.innerHTML.split(' ');
+        const usernameInfo = buttonList[1];
+        localStorage.setItem('userNameInfo', usernameInfo);
+        console.log(localStorage.getItem('userNameInfo'));
+  });}
+              
+                        
+  </script> 
 {% endblock %}  
  

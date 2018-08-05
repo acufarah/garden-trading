@@ -124,7 +124,7 @@ def produce_add():
 
     return render_template("produce_add.html")
 
-@app.route('/produce_add', methods=["POST"])
+@app.route('/produce_add.html', methods=["POST"])
 def produce_add_process():
     """Sign up process."""
 
@@ -320,15 +320,73 @@ def messages():
     """Check messages route"""
     if 'user_id' in session:
         u_id = session.get('user_id')
-        current_user = User.query.filter(User.user_id== session['user_id'])
+        current_user = User.query.filter(User.user_id == session['user_id'])
         current_user.last_message_read_time = datetime.utcnow()
         db.session.commit()
         #messages = current_user.messages_received.order_by(Message.timestamp.desc())
-        messages = Message.query.filter(Message.recipient_id ==u_id).order_by(Message.message_id.desc())
+        messages = Message.query.filter(Message.recipient_id == u_id).order_by(Message.message_id.desc())
         message = messages.first()
-        return render_template('messages.html', messages=messages, current_user=current_user, message= message)  
+        if message == None:
+            flash('You have no messages')
+            return redirect('/users_profile/{}'.format(u_id))
+        else:
+            return render_template('messages.html', messages=messages, current_user=current_user, message= message)  
 
-    
+@app.route('/users_profile/my_listings.html', methods=["GET"])
+def my_listings():
+    """My Listings Route"""
+    if 'user_id' in session:
+        u_id = session.get('user_id')
+        current_user = User.query.filter(User.user_id == session['user_id'])
+        user_produce_listings = Produce.query.filter(Produce.user_id == u_id).order_by(Produce.prod_id.desc())        
+        if user_produce_listings == None:
+            flash('You have no produce listings')
+            return redirect('/users_profile/{}'.format(u_id))     
+        else:    
+            return render_template('my_listings.html', listings=user_produce_listings, current_user=current_user) 
+
+
+@app.route('/users_profile/my_listings.html', methods=["POST"])
+def delete_listing():
+    """Delete a Produce Listing"""
+    if 'user_id' in session:
+        user_id = session.get('user_id')
+
+        user_produce_listing_id = request.form.get("listing")
+        produce = Produce.query.filter(Produce.prod_id == user_produce_listing_id).first()
+        db.session.delete(produce)
+        db.session.commit()
+        flash('Your listing was successfully deleted.')
+        return redirect('/users_profile/{}'.format(user_id))
+
+# @app.route('/users_profile/my_listings.html', methods=["POST"])
+# def update_listing():
+#     """Update a Produce Listing"""
+#     if 'user_id' in session:
+#         user_id = session.get('user_id')
+
+#         user_produce_listing_id = request.form.get("listing")
+#         produce = Produce.query.filter(Produce.prod_id == user_produce_listing_id).first()
+#         description = produce.describe
+#         updated_description = request.form.get("d_update")
+#         date = produce.prod_date
+#         updated_date = request.form.get("date_update")
+#         if updated_description is not None:
+#             description = updated_description
+#             db.session.commit()
+#             return jsonify({'Description': description})
+#         if updated_date is not None:
+#             date = updated_date
+#             db.session.commit()
+#             return jsonify({'Available' : date})
+
+
+
+
+        db.session.delete(produce)
+        db.session.commit()
+        flash('Your listing was successfully deleted.')
+        return redirect('/users_profile/{}'.format(user_id))
 
 
 if __name__ == "__main__":

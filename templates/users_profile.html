@@ -1,38 +1,45 @@
 {% extends 'base.html' %}
 {% set active_page = "users_profile" %}
 {% block content %}
-
-<h2>User Profile</h2>
-
-<figure>
+<center>
+<div class="col-md-6 col-lg-6 col-sm-12">
+<div class="container-fluid shadow-lg p-3 mb-5 bg-white rounded">
+<h2 class="text-center"<h2>{{user.fname}} {{user.lname}}</h2>
+</div>
+</div>
+</center>
+<center>
+<div class="col-md-6 col-lg-6 col-sm-12">
+    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+<div class="card-img">
   <img src="/static/uploads/profile_pics/{{usr_img}}"
        alt="User photo"
-       width="250"
-       height="250">
-</figure>
-  <ul>
-  	<li>
-  		Name: {{user.fname}} {{user.lname}}<br>
-  		Username: {{user.username}}<br>
-  		Email: {{user.email}}<br>
-  		Address: {{user.address}}<br>
-  		City: {{user.city}}<br>
-  		State: {{user.state}}<br>
-  		Zipcode: {{user.zipcode}}<br>
-  	</li>
- </ul>
-<br>
-
-<a href="img_upload.html">I want to add a profile picture!</a>
-
-<br>
-<a href="produce_add.html">I want to add a new produce listing!</a>
+       class="img-fluid img-thumbnail">
+</div>
+<div class="card-body">
+                  <center>
+                    <p class="card-text"> 
+  <dl>
+  		<dd><h3>Username: {{user.username}}</h3></dd>
+  		<dd>Email: {{user.email}}</dd>
+  		<dd>Address: {{user.address}}</dd>
+  		<dd>City: {{user.city}}</dd>
+  		<dd>State: {{user.state}}</dd>
+  		<dd>Zipcode: {{user.zipcode}}</dd>
+ </dl>
+</p>
+</div>
+ <a class="btn btn-success btn-lg" href="img_upload.html" role="button">Add a Profile Picture</a>
 
 <br>
-<a href="messages.html">Check my messages</a>
+<a class="btn btn-success btn-lg" href="my_listings.html" role="button">My Produce Listings</a>
+<br>
+<a class="btn btn-success btn-lg" href="produce_add.html" role="button">Add a New Produce Listing</a>
 
+<br>
+<a class="btn btn-success btn-lg" href="messages.html" role="button">Check My Messages</a>
 
-
-
-
+   </div>
+</div>
+</center>
 {% endblock %}
