@@ -293,6 +293,10 @@ def img_upload():
             flash("Photo uploaded and stored successfully")
             return redirect('/users_profile/{}'.format(user_id))
 
+        if f1 == None and f2 == None and f3 == None:
+            flash("Something went wrong with your photo upload. Try again")
+            return redirect('/users_profile/img_upload.html')
+
 
 
 @app.route('/send_message')
@@ -359,7 +363,7 @@ def delete_listing():
         flash('Your listing was successfully deleted.')
         return redirect('/users_profile/{}'.format(user_id))
 
-# @app.route('/users_profile/my_listings.html', methods=["POST"])
+    # @app.route('/users_profile/my_listings/update_listing.html', methods=["GET","POST"])
 # def update_listing():
 #     """Update a Produce Listing"""
 #     if 'user_id' in session:
@@ -379,14 +383,6 @@ def delete_listing():
 #             date = updated_date
 #             db.session.commit()
 #             return jsonify({'Available' : date})
-
-
-
-
-        db.session.delete(produce)
-        db.session.commit()
-        flash('Your listing was successfully deleted.')
-        return redirect('/users_profile/{}'.format(user_id))
 
 
 if __name__ == "__main__":

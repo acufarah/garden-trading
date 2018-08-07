@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% set active_page = "produce_add" %}
+{% block content %}
+<div class="container shadow-lg p-3 mb-5 bg-white rounded">
+		<center>
+			<img class="image-fluid" src="../static/images/my-prod-heading.jpg">
+		</center>
+</div>
+<div class="row">
+	{% for listing in listings %}
+	<div class="col-md-6 col-lg-6 col-sm-12 offset-md-3">
+		<div class="card shadow-lg p-3 mb-5 bg-white rounded">
+			<div class="card-img">
+				<img src="/static/uploads/prod_img/{{listing.prod_img}}" class="img-fluid img-thumbnail">
+			</div>	
+			<div class="card-body">
+		        <center>
+		            <p class="card-text">	
+		              <dl>
+						<dt><h3>{{ listing.prod_name}}</h3></dt>
+						<dd>{% if listing.prod_type == 1 %}
+						  		Category: Vegetable
+						  		{% elif listing.prod_type == 2 %}
+						  		Category: Fruit
+						  		{% elif listing.prod_type == 3 %}
+						  		Category: Herbs
+						  		{% elif listing.prod_type == 4 %}
+						  		Category: Seeds
+						  		{% elif listing.prod_type == 5 %}
+						  		Category: Nuts
+						{% endif %}</dd>
+						<dd>{{listing.describe}}</dd>
+						<dt>Available:</dt>
+						<dd>{{listing.avail_date}}</dd>
+					  </dl>
+					</p>
+				</center>
+			</div>
+			<div class="card-footer">
+				<!-- <form class="form-inline my-2 my-lg-0" method="POST" action=".html">
+		        	<input type="hidden" value="{{listing.prod_id}}" name="updateModal">
+		        	<a class="btn btn-success btn-block my-2 sm-0 lButton" href="update_listing" role="button" value="{{listing.prod_id}}">Update Listing: {{listing.prod_id}}</a><br>
+		        </form>
+		        <br> -->
+		        <form class="form-inline my-2 my-lg-0" method="POST" action="my_listings.html">
+		        	<input type="hidden" value="{{listing.prod_id}}" name="listing">
+		        	<button class="btn btn-secondary btn-block my-2 my-sm-0" type="submit" value="delete">Delete This Listing</button>
+		        </form>
+		    </div>
+		  
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+<!-- <script>
+ //Add recipient username from button to local storage in order to retrieve info on send messages page.
+  const lButtons = document.getElementsByClassName("btn btn-success btn-block my-2 sm-0 lButton");
+  const len = lButtons.length;
+  console.log(lButtons);
+  console.log(len);
+  for (i = 0; i < len; i++) { 
+      lButtons[i].addEventListener("click", function(event) {
+      	// const buttonList = event.target.value()
+        const buttonList = event.target.innerHTML.split(' ');
+        const listingInfo = buttonList[2];
+        console.log(buttonList[2]);
+        localStorage.setItem('listingNameInfo', listingInfo);
+        console.log(localStorage.getItem('listingInfo'));
+  });}
+              
+                        
+  </script>  -->
+{% endblock %} 
+
