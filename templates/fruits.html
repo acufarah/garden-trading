@@ -1,1 +1,77 @@
-<h2>This will be the Fruits Directory</h2>
+{% extends 'base.html' %}
+{% set active_page = "fruits" %}
+{% block content %}
+ <div class="container shadow-lg p-3 mb-5 bg-white rounded">
+<center>
+<img class="image-fluid" src="static/images/fruit-heading.jpg">
+</center>
+</div>
+{% if 'user_id' not in session %}
+<center>
+<h5> Sign up and log in to message other users. </h5>
+</center><br>
+{% endif %}
+  <div class="row">
+{% for fruit in fruits %}
+  
+        <div class="col-md-4 col-lg-4 col-sm-12">
+         
+         <div class="card full-height shadow-lg p-3 mb-5 bg-white rounded">
+
+               <div class="card-img">
+                  <img src="/static/uploads/prod_img/{{fruit.prod_img}}" class="img-fluid img-thumbnail">
+                  </div>
+                <div class="card-body">
+                  <center>
+                    <p class="card-text"> 
+                      <dl>
+                      <dt><h3>{{ fruit.prod_name}}</h3></dt>
+                      <dd>{{ fruit.describe }}</dd>
+                      <dt>Available:</dt>
+                      <dd>{{ fruit.avail_date }}</dd>
+                      </dl>
+                    </p>
+                    <figure>
+                      <img src="/static/uploads/profile_pics/{{fruit.user.usr_img}}"class="img-fluid img-thumbnail" alt="User photo"
+                      width="100"
+                      height="100">
+                    </figure>
+                  </center>
+              </div>
+               <div class="card-footer">
+                  {% if 'user_id' in session %}
+                  <form>
+                  <center>
+                  <a class="btn btn-success btn-lg btn-block mButton"  href="../send_message" role="button">Message<br> {{ fruit.user.username|capitalize }}</a>
+               
+                 <!-- <button type="submit" formaction='../send_message'>Send Gardener a Message</button> -->
+                  </center>
+                  </form>
+             
+          <!-- <a href='../send_message' class="card-link">Send A Gardener a Message</a> -->
+                {% endif %}
+               </div>
+        </div>
+      </div>
+    
+   {% endfor %}
+</div>
+
+<script>
+ //Add recipient username from button to local storage in order to retrieve info on send messages page.
+  const mButtons = document.getElementsByClassName("btn btn-success btn-lg btn-block mButton");
+  const len = mButtons.length;
+  console.log(mButtons);
+  console.log(len);
+  for (i = 0; i < len; i++) { 
+      mButtons[i].addEventListener("click", function(event) {
+        const buttonList = event.target.innerHTML.split(' ');
+        const usernameInfo = buttonList[1];
+        localStorage.setItem('userNameInfo', usernameInfo);
+        console.log(localStorage.getItem('userNameInfo'));
+  });}
+              
+                        
+  </script> 
+{% endblock %}  
+

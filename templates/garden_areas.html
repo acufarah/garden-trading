@@ -1,1 +1,110 @@
-<h2>This will be the Garden Directory with Gmaps search functioning</h2>
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <style>
+      html,
+      body {
+        font-family: Arial, sans-serif;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        height: 100%;
+        position: relative;
+      }
+      input {
+        font-size: 12px;
+      }
+      h1 {
+        color: #525454;
+        font-size: 22px;
+        margin: 0 0 10px 0;
+        text-align: center;
+      }
+      #hide-listings,
+      #show-listings {
+        width: 48%;
+      }
+      #map {
+        bottom:0px;
+        height: 100%;
+        left: 362px;
+        position: absolute;
+        right: 0px;
+      }
+      .options-box {
+        background: #fff;
+        border: 1px solid #999;
+        border-radius: 3px;
+        height: 100%;
+        line-height: 35px;
+        padding: 10px 10px 30px 10px;
+        text-align: left;
+        width: 340px;
+      }
+    </style>
+  </head>
+  <body>
+{% extends 'base.html' %}
+{% set active_page = "garden_areas" %}
+{% block content %}
+
+                 <div class="container">
+                    <div class="options-box">
+                      <br>  <h1>Find Gardens in Your Area</h1>
+                      <div><br>
+                        <input id="show-listings" type="button" value="Show Listings">
+                        <input id="hide-listings" type="button" value="Hide Listings">
+                      </div>
+                    </div>
+                    <div id="map"></div><br>
+                  </div>
+
+
+<script>
+ // $.getJSON( "/garden_areas.json", function( data ) {
+ //   console.log( data ) });
+
+//Create a Google map    
+var map;
+function initMap() {
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 11,
+    center: {lat: 37.335796 , lng: -121.885254}
+  });
+
+  infowindow = new google.maps.InfoWindow(); 
+
+  //Load GeoJSON data
+  map.data.loadGeoJson( "/garden_areas.json");
+
+  map.data.addListener('click', function(event) {
+  // in the geojson feature that was clicked, get the "place" and "mag" attributes
+  let name = event.feature.getProperty("name");
+  let zipcode = event.feature.getProperty("zipcode");
+  let info = event.feature.getProperty("info"); 
+
+  let html = `username: ${name} \r\n zipcode: ${zipcode} \r\n info: ${info}`; // combine everything in properties to render in html
+
+  infowindow.setContent(html); // show the html variable in the infowindow
+
+  infowindow.setPosition(event.feature.getGeometry().get()); // anchor the infowindow at the marker
+  infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)}); // move the infowindow up slightly to the top of the marker icon
+  infowindow.open(map);
+
+  }); 
+}
+
+
+   </script>
+
+    <script async defer
+        src=
+        "https://maps.googleapis.com/maps/api/js?key=AIzaSyDpibo_0YQwz2T28Bh06cP9UX3ID-0yt-U&v=3&callback=initMap">
+    </script>
+{% endblock %}
+  </body>
+</html>
+

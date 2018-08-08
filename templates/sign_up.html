@@ -1,27 +1,51 @@
 {% extends 'base.html' %}
+{% set active_page = "sign_up" %}
 {% block content %}
 
-<h2>Garden Trading Sign Up Form</h2>
-
+<h2 class="text-center">Garden Trading Sign Up Form</h2>
+<center>
+<div class="col-md-8 col-lg-8 col-sm-12">
+  <div class="card shadow-lg p-3 mb-5 bg-white rounded">
     <form action='/sign_up' method = "POST">
-    	First name: <input type='text' name='fname' required>
-    	Last name: <input type='text' name='lname' required><br>
-    	Address: <input type='text' name='address' required><br>
-    	City: <input type='text' name='address' required>
-    	State: <input type='text' name='state' required><br>
-    	Zipcode: <input type='text' name='zipcode' required><br>
-    	Enter new username: <input type='text' name='username' required><br>
-        Email address: <input type='text' name='email' required><br>
-        Enter new password: <input type='text' name='password' required><br><br>
-        <p>Tell us about yourself as a gardener:</p>
-        <div>
-        	<textarea name='about_me' required></textarea><br>
-    	</div>
-        <p>Tell us about your garden (is it conventional, organic, hydroponic, anything you want others to know about it):</p>
-        <div>
-        	<textarea name='about_garden' required></textarea>
-        </div>
-        <input type='submit'>
+      <div class="card-body">
+        <center>
+          <p class="card-text text-center"> 
+            <div class="form-group">
+                <div class="form-group row">
+                  <center>
+                  <div class="col-md-8 col-lg-8 col-sm-12">
+                    First Name: <input type='text' name='fname' class="form-control" required><br>
+                  
+                    Last Name: <input type='text' name='lname' class="form-control" required><br>
+            
+                	Address: <input type='text' name='address' class="form-control" required><br>
+
+                	City: <input type='text' name='city' class="form-control" required>
+                	State: <input type='text' name='state' class="form-control" required><br>
+                	Zipcode: <input type='text' name='zipcode' class="form-control" required><br>
+                	
+                    Email address: <input type='text' name='email' class="form-control" required><br>
+                    Enter new username: <input type='text' name='username' class='form-control' required><br>
+                    Enter new password: <input type='password' name='password' class="form-control" required><br><br>
+                    <p>Tell us about yourself as a gardener:</p>
+                    <div class="form-group">
+                    	<textarea name='about_me' class="form-control" required></textarea><br>
+                	</div>
+                    <p>Tell us about your garden (is it conventional, organic, hydroponic, anything you want others to know about it):</p>
+                    <div>
+                    	<textarea name='about_garden' class="form-control" required></textarea>
+                    </div>
+                    <br>
+                    <button type="button submit" class="btn btn-success btn-lg btn-block">Submit</button>
+                  </div>
+                 </center>
+                </div>
+            </div>
+          </p>
+        </center>
+      </div>    
     </form>
+  </div>
+</div>  
 
 {% endblock %}        
