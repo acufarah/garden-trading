@@ -1,0 +1,109 @@
+#background {background-color: #b8edd0;}
+
+#green-message-header {
+	font-family: 'Special Elite', cursive;
+	color: #fff;
+	background-color: #28a745;
+}
+
+#green-form-header {
+	font-family: 'Raleway', sans-serif;
+	color: #fff;
+	background-color: #28a745;
+}
+
+#green-list-header {
+	font-family: 'Raleway', sans-serif;
+	color: #fff;
+	background-color: #28a745;
+}
+#green-user-header {
+	font-family: 'Raleway', sans-serif;
+	color: #fff;
+	background-color: #28a745;
+}
+
+#m-text1 {
+	font-family: 'Special Elite', cursive !important;
+}
+
+#message-button1 {
+	font-family: 'Special Elite', cursive;
+	font-size: 1.4em;
+	color:  #046f0d;
+	background-color: #28a745 !important;
+}
+
+#message-button2 {
+	font-family: 'Special Elite', cursive;
+	font-size: 1.4em;
+	color:  #046f0d;
+	background-color: #28a745 !important;
+}
+
+.navbar-light .navbar-nav .nav-link {
+     color: #98eb9f; 
+     font-family: 'Raleway', sans-serif;
+     font-size: 1.1em; 
+ }
+
+.navbar-light .navbar-nav .nav-link:hover { 
+     color: grey;
+ }
+
+ .navbar-light .navbar-nav .active>.nav-link, .navbar-light .navbar-nav .nav-link.active, .navbar-light .navbar-nav .nav-link.show, .navbar-light .navbar-nav .show>.nav-link {
+    color: #fff;
+}
+
+.navbar-light .navbar-brand {
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.4em;
+    font-weight: bold;
+
+}
+
+.btn-success {
+    color: #c7ffcd ;
+   	font-family: 'Raleway', sans-serif;
+    background-color: #28a745;
+    border-color: #28a745;
+    box-shadow: 0 10px 6px -6px rgba(0, 0, 0, 0.45);
+
+}
+
+.search {
+	color: #98eb9f; 
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.15em
+}
+
+.full-height {
+  height: 97%;
+}
+
+.rale {
+	font-family: 'Raleway', sans-serif;
+	font-size: 1.15em
+}
+
+.carousel-caption {
+    position: absolute;
+    right: 15%;
+    bottom: 20px;
+    left: 15%;
+    z-index: 10;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: #fff;
+    text-align: center;
+    font-family: 'Special Elite', cursive;
+    font-size: 4em; 
+    font-weight: bold;
+}
+
+.body{
+	font-family: 'Raleway', sans-serif;
+}
+ /*#c9ffd0*/}
+}
