@@ -3,12 +3,18 @@
 {% block content %}
 
 
-<h2 class="text-center">Add A Produce Listing</h2>
+<center>
+<div class="col-md-6 col-lg-6 col-sm-12">
+<div id="green-form-header" class="container-fluid shadow-lg p-3 mb-5 rounded">
+<h2 class="text-center"<h2>Add Produce Listing</h2>
+</div>
+</div>
+</center>
 <center>
 <div class="col-md-8 col-lg-8 col-sm-12">
  <div class="card shadow-lg p-3 mb-5 bg-white rounded">
   <form action="/produce_add.html" method="POST">
-    <div class="card-body">
+    <div class="rale card-body">
         <center>
           <p class="card-text text-center"> 
             <div class="form-group">
@@ -16,10 +22,10 @@
                    	  <div class="form-group row">
                        
                       	<div class="col-md-12 col-lg-12 col-sm-12">
-								What is it? (tomatoes? pecans? oregano? etc.):<input type='text' name='prod_name' class="form-control" required><br>
+								<h5>Produce Name:</h5><input type='text' name='prod_name' class="form-control" required><br>
 								<div class="input-group mb-3">
 								  <div class="input-group-prepend">
-								    <label class="input-group-text" for="inputGroupSelect01">Produce Category</label>
+								    <label class="input-group-text" for="inputGroupSelect01"><h7>Produce Category</h7></label>
 								  </div>
 								  <select class="custom-select" name="prod_type" id="inputGroupSelect01">
 								    <option selected>Choose...</option>
@@ -31,10 +37,10 @@
 								  </select>
 								</div>
 								
-								Date Available:<input type="date" id="avail_date" name="avail_date"><br><br>
+								<h5>Date Available:</h5><input type="date" id="avail_date" name="avail_date"><br><br>
 
 								<div class="form-group">
-  									<label for="describe">Description(variety, organic or conventional, taste, etc):</label>
+  									<label for="describe"><h5>Tell us about your produce and what you want to trade it for:</h5></label>
  									 <textarea class="form-control" rows="5" name="describe" id="describe" required></textarea>
 								</div>
 									<button type="button submit" class="btn btn-success btn-lg btn-block">Submit</button>

@@ -3,7 +3,7 @@
 {% block content %}
 <center>
 <div class="col-md-6 col-lg-6 col-sm-12">
-<div class="container-fluid shadow-lg p-3 mb-5 bg-white rounded">
+<div id="green-user-header" class="container-fluid shadow-lg p-3 mb-5 rounded">
 <h2 class="text-center"<h2>{{user.fname}} {{user.lname}}</h2>
 </div>
 </div>
@@ -26,6 +26,7 @@
   		<dd>City: {{user.city}}</dd>
   		<dd>State: {{user.state}}</dd>
   		<dd>Zipcode: {{user.zipcode}}</dd>
+      <dd>User Info: {{user.about_me}}
  </dl>
 </p>
 </div>

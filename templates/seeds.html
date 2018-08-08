@@ -6,38 +6,58 @@
 <img class="image-fluid" src="static/images/seed-heading.jpg">
 </center>
 </div>
+{% if 'user_id' not in session %}
+<center>
+<h5> Sign up and log in to message other users. </h5>
+</center><br>
+{% endif %}
 <div class="row">
 {% for seed in seeds %}
 
    <div class="col-md-4 col-lg-4 col-sm-12">
     <div class="card full-height shadow-lg p-3 mb-5 bg-white rounded">
      <div class="card-img">
-      <img src="#" class="img-fluid">
+      <img src="/static/uploads/prod_img/{{seed.prod_img}}" class="img-fluid img-thumbnail">
      </div>
      
-     	<div class="card-body">
-     		<center>
-			<h4 class="card-title"{{ seed.prod_name }}</h4><br>
-			<p class="card-text">	
-			Available after: {{ seed.avail_date }}<br>
-			Description: {{ seed.describe }}<br>
-		</p>
-		    </center>
-		</div>
-     <div class="card-footer">
-     	{% if 'user_id' in session %}
-     	<form>
-     	<center>
-     	<a class="btn btn-success btn-lg btn-block mButton" href="../send_message" role="button">Send {{ nut.user.username }} A Message</a>	
-    	<!-- <button type="submit" formaction='../send_message'>Send Gardener a Message</button> -->
-    	</center>
-		</form>
-      <!-- <a href='../send_message' class="card-link">Send A Gardener a Message</a> -->
-      {% endif %}
-     </div>
-    </div>
-   
-{% endfor %}
+                <div class="card-body">
+                  <center>
+                    <p class="card-text"> 
+                      <dl>
+                      <dt><h3>{{ seed.prod_name}}</h3></dt>
+                      <dd>{{ seed.describe }}</dd>
+                      <dt>Available:</dt>
+                      <dd>{{ seed.avail_date }}</dd>
+                      </dl>
+                    </p>
+                    <figure>
+                      <img src="/static/uploads/profile_pics/{{seed.user.usr_img}}"class="img-fluid img-thumbnail" alt="User photo"
+                      width="100"
+                      height="100">
+                    </figure>
+                  </center>
+              </div>
+               <div class="card-footer">
+                {% if 'user_id' in session %}
+                <form>
+                <center>
+                <a class="btn btn-success btn-lg btn-block mButton"  href="../send_message" role="button">Message<br> {{ seed.user.username|capitalize }}</a>
+               
+                <!-- <button type="submit" formaction='../send_message'>Send Gardener a Message</button> -->
+                </center>
+                </form>
+            
+               {% endif %}
+            </div>
+        </div>
+  
+      </div>
+  
+  
+
+ 
+  {% endfor %}
+
 </div>
 <script>
 

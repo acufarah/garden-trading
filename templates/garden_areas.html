@@ -63,7 +63,6 @@
                   </div>
 
 
-
 <script>
  // $.getJSON( "/garden_areas.json", function( data ) {
  //   console.log( data ) });
@@ -72,13 +71,13 @@
 var map;
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 4,
+    zoom: 11,
     center: {lat: 37.335796 , lng: -121.885254}
   });
 
   infowindow = new google.maps.InfoWindow(); 
 
-//Load GeoJSON data
+  //Load GeoJSON data
   map.data.loadGeoJson( "/garden_areas.json");
 
   map.data.addListener('click', function(event) {
@@ -86,15 +85,17 @@ function initMap() {
   let name = event.feature.getProperty("name");
   let zipcode = event.feature.getProperty("zipcode");
   let info = event.feature.getProperty("info"); 
-  let html = `username: ${name} \n zipcode: ${zipcode} \n info: ${info}`; // combine everything in properties to render in html
+
+  let html = `username: ${name} \r\n zipcode: ${zipcode} \r\n info: ${info}`; // combine everything in properties to render in html
+
   infowindow.setContent(html); // show the html variable in the infowindow
+
   infowindow.setPosition(event.feature.getGeometry().get()); // anchor the infowindow at the marker
   infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)}); // move the infowindow up slightly to the top of the marker icon
   infowindow.open(map);
 
   }); 
 }
-
 
 
    </script>

@@ -58,6 +58,8 @@ def sign_up_process():
     latitude = location.latitude
     longitude = location.longitude
     pw_hash = bcrypt.generate_password_hash(password)
+    about_me = request.form.get('about_me')
+    about_garden = request.form.get('about_garden')
 
     if User.query.filter_by(username='username').first():
         flash("User with this username already exists.")
@@ -67,7 +69,8 @@ def sign_up_process():
     else:
         #Store new user info in DB
         new_user = User(username=username, email=email, password=pw_hash, fname=fname, lname=lname,
-                        address=address, city=city, state=state, zipcode=zipcode, full_address=full_address, latitude=latitude, longitude=longitude)
+                        address=address, city=city, state=state, zipcode=zipcode, full_address=full_address, latitude=latitude, longitude=longitude,
+                        about_me=about_me, about_garden=about_garden)
         db.session.add(new_user)
         db.session.commit()
         flash("User added to database. Please log in.")
@@ -194,7 +197,7 @@ def address_map():
         lng = user.longitude
         username = user.username
         zipcode = user.zipcode
-        gard_info = user.about_garden
+        gard_info = user.about_me
         loc_point = geojson.Point((user.longitude, user.latitude))
         loc_properties = dict(name=username, zipcode=zipcode, info=gard_info)
         loc_json = geojson.Feature(geometry=loc_point, properties=loc_properties)
@@ -307,7 +310,8 @@ def send_message_form():
 @app.route('/send_message', methods=['POST'])
 def send_message():
     """Get message input to store and send"""
-    username = request.form.get('recipient_username')
+    username1 = request.form.get('recipient_username')
+    username = username1.lower()
     user = User.query.filter_by(username=username).first_or_404()
     current_user = User.query.filter(User.user_id== session['user_id']).first()
     sender = current_user

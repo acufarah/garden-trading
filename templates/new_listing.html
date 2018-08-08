@@ -1,34 +1,46 @@
 {% extends 'base.html' %}
 {% set active_page = "new_listing" %}
 {% block content %}
-<h2>New Listing</h2>
-    <figure>
-  <img src="/static/uploads/prod_img/{{prod_img}}"
-       alt="User photo"
-       width="250"
-       height="250">
-</figure>
-  <ul>
-  	<li>
-  		Name: {{prod_name}}<br>
-  		{% if prod_type == 1 %}
-  		Category: Vegetable
-  		{% elif prod_type == 2 %}
-  		Category: Fruit
-  		{% elif prod_type == 3 %}
-  		Category: Herbs
-  		{% elif prod_type == 4 %}
-  		Category: Seeds
-  		{% elif prod_type == 5 %}
-  		Category: Nuts
-  		{% endif %}
-  		<br>
-  		Availability Date: {{avail_date}}<br>
-      Description: {{describe}}<br>
-      Gardener: {{ gardener }}
-  	</li>
- </ul>
+<center>
+<div class="col-md-6 col-lg-6 col-sm-12">
+<div id="green-list-header" class="container-fluid shadow-lg p-3 mb-5 rounded">
+<h2 class="text-center"<h2>New Listing</h2>
+</div>
+</div>
+<div class="col-md-6 col-lg-6 col-sm-12">
+    <div class="card shadow-lg p-3 mb-5 bg-white rounded">
+    <center>
+    <div class="card-img">
+    <img src="/static/uploads/prod_img/{{prod_img}}" alt="produce photo"
+       class="img-fluid img-thumbnail">
+    </div>
+    <div class="rale card-body">
+    <center>
+      <p class="card-text"> 
+      <dl>
+  		<dt><h5><bold>Name:  {{prod_name}}</bold></h5></dt>
+  		<dd><bold> {% if prod_type == 1 %}
+  		  Category: Vegetable
+  		  {% elif prod_type == 2 %}
+  		  Category: Fruit
+  		  {% elif prod_type == 3 %}
+  		  Category: Herbs
+  		  {% elif prod_type == 4 %}
+  		  Category: Seeds
+  		  {% elif prod_type == 5 %}
+  		  Category: Nuts
+  		  {% endif %}</bold></dd>
+  		<dd>Availability Date: {{avail_date}}</dd>
+      <dd>Description: {{describe}}</dd>
+      <dd>Gardener: {{ gardener }}</dd>
+  	</dl>
+   </p>
 
- <a href="users_profile/img_upload.html">Add a photo of your produce or garden</a>
+     <a class="btn btn-success btn-lg" href="users_profile/img_upload.html" role="button">Add Photo of Produce Listing</a>
+  </center>
+</div>
+</center>
+</div
+</center>
 
 {% endblock %}  
