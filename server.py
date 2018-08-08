@@ -222,7 +222,7 @@ def full_text_search():
     #idx = lunr( ref='id', fields=('title', 'body'), documents=documents)
     return jsonify(documents)
 
-@app.route('/search_results', methods=['POST'])
+@app.route('/search_results', methods=['GET','POST'])
 def search_results():
     """Render search results from search input"""
     query = request.form.get('search')
@@ -246,8 +246,11 @@ def search_results():
         ref = int(result.get('ref'))
         p = Produce.query.filter(Produce.prod_id == ref ).one()
         prod.append(p)
-
-    return render_template('/search_results.html',
+    if prod == []:
+        flash("There are no results that match your search request")
+        return redirect('/')
+    else:
+        return render_template('/search_results.html',
                            query=query,
                            results=results,
                            prod=prod)

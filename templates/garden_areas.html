@@ -44,6 +44,17 @@
         text-align: left;
         width: 340px;
       }
+
+      #content {
+        padding-top: 20px;
+        padding-bottom: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        font-family: 'Special Elite', cursive;
+        color: #fff;
+        background-color: #28a745;
+      }
+
     </style>
   </head>
   <body>
@@ -85,10 +96,20 @@ function initMap() {
   let name = event.feature.getProperty("name");
   let zipcode = event.feature.getProperty("zipcode");
   let info = event.feature.getProperty("info"); 
+  let contentString = '<div id="content">'+
+      '<div id="infoStyling">'+
+      '</div>'+
+      '<center>' +
+      `<h5 id="firstHeading" class="firstHeading">username: ${name}</h5>`+
+      '<div id="bodyContent">'+
+      `<p><b>zipcode: ${zipcode}</b>` +
+      `<p style="white-space:pre-wrap; width:30ex">${info}</p>` +
+      '</center>' +
+      '</div>'+
+      '</div>';
+  let html = `username: ${name}  zipcode: ${zipcode} <br>info: ${info}`; // combine everything in properties to render in html
 
-  let html = `username: ${name} \r\n zipcode: ${zipcode} \r\n info: ${info}`; // combine everything in properties to render in html
-
-  infowindow.setContent(html); // show the html variable in the infowindow
+  infowindow.setContent(contentString); // show the html variable in the infowindow
 
   infowindow.setPosition(event.feature.getGeometry().get()); // anchor the infowindow at the marker
   infowindow.setOptions({pixelOffset: new google.maps.Size(0,-30)}); // move the infowindow up slightly to the top of the marker icon
