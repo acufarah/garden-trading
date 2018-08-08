@@ -49,13 +49,13 @@
 						{% if 'user_id' in session %}
 					            <form>
 					              <center>
-					               	<a class="btn btn-success btn-lg btn-block mButton"  href="../send_message" role="button">Send {{ p.user.username }} <br> a message</a>
+					               	<a class="btn btn-success btn-lg btn-block mButton"  href="../send_message" role="button">Message<br> {{ p.user.username|capitalize }}</a>
 					    		  </center>
 					            </form>
 					    {% endif %}
 				</div>
 			</div>
-		    
+		    </div>
 			{% endfor %}
 	
 		</div>
