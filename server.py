@@ -20,7 +20,7 @@ from model import User, Produce, Message, connect_to_db, db, Bcrypt
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 app.config.from_object(__name__)
-app.config['UPLOAD_FOLDER'] = "/home/vagrant/src/gardenproject/static/uploads"
+app.config['UPLOAD_FOLDER'] = "/gardenproject/static/uploads"
 
 ALLOWED_EXTENSIONS = set([ 'png', 'jpg', 'jpeg'])
 # Required to use Flask sessions and the debug toolbar
